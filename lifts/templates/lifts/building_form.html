@@ -1,0 +1,7 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+<h1 class="text-center align-middle">Создание здания</h1>
+<form method="post">{% csrf_token %}{{ form.as_p }}</form>
+<button type="submit" class="btn btn-success btn-sm w-100">Сохранить</button>
+<a class="btn btn-secondary  btn-sm w-100" href="{% url 'lifts:building_list' %}">Отмена</a>
+{% endblock %}

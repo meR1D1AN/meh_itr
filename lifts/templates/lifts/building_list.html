@@ -1,0 +1,21 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+<h1>Список зданий</h1>
+
+<p>
+    Привет, {{ user.username }}! <a href="{% url 'logout' %}" class="btn btn-secondary">Выйти</a>
+</p>
+
+<div class="row">
+    {% for building in object_list %}
+    <div class="col-md-4 mb-2">
+        <a href="{% url 'lifts:building_detail' building.id %}" class="btn btn-primary btn-sm w-100">
+            {{ building.get_address_display }} (количество лифтов: {{ building.elevators.count }})</a>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="list-group mt-2">
+    <a class="btn btn-success btn-sm w-100" href="{% url 'lifts:building_create' %}">Добавить нового клиента</a>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+<h1>{{ elevator.get_elevator_display }}</h1>
+
+<p>
+    Привет, {{ user.username }}! <a href="{% url 'logout' %}" class="btn btn-secondary">Выйти</a>
+</p>
+
+<h2>Информация о лифте:</h2>
+<ul class="list-group">
+    <li class="list-group-item">Здание: {{ elevator.buildings.first.get_address_display }}</li>
+</ul>
+
+<h2>Проблемы:</h2>
+<ul class="list-group">
+    {% for problem in problems %}
+    <li class="list-group-item">
+        {{ problem.problem }}
+        {% if problem.resolved %}
+        <span class="badge badge-success">Решено</span>
+        {% else %}
+        <span class="badge badge-danger">Не решено</span>
+        {% endif %}
+    </li>
+    {% empty %}
+    <li class="list-group-item">Нет проблем</li>
+    {% endfor %}
+</ul>
+
+<h2>Ремонты:</h2>
+<ul class="list-group">
+    {% for replacement in replacements %}
+    <li class="list-group-item">
+        {{ replacement.info_problem }}
+        {% if replacement.resolved %}
+        <span class="badge badge-success">Решено</span>
+        {% else %}
+        <span class="badge badge-danger">Не решено</span>
+        {% endif %}
+    </li>
+    {% empty %}
+    <li class="list-group-item">Нет ремонтов</li>
+    {% endfor %}
+</ul>
+
+<h2>Техническое обслуживание (ТО):</h2>
+<ul class="list-group">
+    {% for to in tos %}
+    <li class="list-group-item">
+        {{ to.date }}
+    </li>
+    {% empty %}
+    <li class="list-group-item">Нет данных о ТО</li>
+    {% endfor %}
+</ul>
+
+<a class="btn btn-secondary btn-sm w-100" href="{% url 'lifts:building_detail' elevator.buildings.first.id %}">Назад к
+    зданию</a>
+{% endblock %}
