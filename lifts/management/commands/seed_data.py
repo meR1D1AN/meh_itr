@@ -2,6 +2,14 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from lifts.models import Building, Elevator
 
+import os
+from dotenv import load_dotenv
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+dot_env = os.path.join(BASE_DIR, ".env")
+load_dotenv(dotenv_path=dot_env)
+
 
 class Command(BaseCommand):
     help = "Заполняет базу данных начальными данными"
@@ -129,7 +137,7 @@ class Command(BaseCommand):
 
         # Создаем администратора
         username = "niky"
-        password = "qwe123"
+        password = os.getenv("POSTGRES_PASSWORD")
         email = "niky@example.com"  # Вы можете изменить email на любой другой
 
         if not User.objects.filter(username=username).exists():
