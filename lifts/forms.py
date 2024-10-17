@@ -1,11 +1,10 @@
 from django import forms
-from .models import Problem
+from lifts.models import TO
 
 
-class ProblemForm(forms.ModelForm):
+class TOForm(forms.ModelForm):
+    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+
     class Meta:
-        model = Problem
-        fields = [
-            "problem"
-        ]  # Указываем только описание проблемы, "resolved" автоматически False
-        labels = {"problem": "Описание проблемы"}
+        model = TO
+        fields = ['date']

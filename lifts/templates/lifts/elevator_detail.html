@@ -1,17 +1,14 @@
 {% extends 'lifts/base.html' %}
 {% block content %}
 <h1>{{ elevator.get_elevator_display }}</h1>
-
-<p>
-    Привет, {{ user.username }}! <a href="{% url 'logout' %}" class="btn btn-secondary">Выйти</a>
-</p>
-
 <h2>Информация о лифте:</h2>
 <ul class="list-group">
     <li class="list-group-item">Здание: {{ elevator.buildings.first.get_address_display }}</li>
 </ul>
 
-<h2>Проблемы:</h2>
+<h2>Проблемы:
+    <a href="{% url 'lifts:problem_form' elevator.id %}" class="btn btn-primary btn-sm">Добавить проблему</a>
+</h2>
 <ul class="list-group">
     {% for problem in problems %}
     <li class="list-group-item">
@@ -21,13 +18,20 @@
         {% else %}
         <span class="badge badge-danger">Не решено</span>
         {% endif %}
+        <br>
+        <form method="post" action="{% url 'lifts:problem_resolve' problem.id %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-sm">Решено</button>
+        </form>
     </li>
     {% empty %}
     <li class="list-group-item">Нет проблем</li>
     {% endfor %}
 </ul>
 
-<h2>Ремонты:</h2>
+<h2>Ремонты:
+    <a href="{% url 'lifts:replacement_form' elevator.id %}" class="btn btn-primary btn-sm">Добавить ремонт</a>
+</h2>
 <ul class="list-group">
     {% for replacement in replacements %}
     <li class="list-group-item">
@@ -37,13 +41,20 @@
         {% else %}
         <span class="badge badge-danger">Не решено</span>
         {% endif %}
+        <br>
+        <form method="post" action="{% url 'lifts:replacement_resolve' replacement.id %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-sm">Решено</button>
+        </form>
     </li>
     {% empty %}
     <li class="list-group-item">Нет ремонтов</li>
     {% endfor %}
 </ul>
 
-<h2>Техническое обслуживание (ТО):</h2>
+<h2>ТО:
+    <a href="{% url 'lifts:to_form' elevator.id %}" class="btn btn-primary btn-sm">Добавить ТО</a>
+</h2>
 <ul class="list-group">
     {% for to in tos %}
     <li class="list-group-item">
@@ -54,6 +65,6 @@
     {% endfor %}
 </ul>
 
-<a class="btn btn-secondary btn-sm w-100" href="{% url 'lifts:building_detail' elevator.buildings.first.id %}">Назад к
-    зданию</a>
+<a class="btn btn-secondary btn-sm w-100 mt-2" href="{% url 'lifts:building_detail' elevator.buildings.first.id %}">Назад
+    к списоку лифтов в здании</a>
 {% endblock %}

@@ -13,7 +13,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -93,8 +92,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
 # URL для перенаправления после выхода из системы
-LOGOUT_REDIRECT_URL = '/login/'
+LOGOUT_REDIRECT_URL = '/'
 # URL для перенаправления после успешного входа
-LOGIN_REDIRECT_URL = '/lifts/'
+LOGIN_REDIRECT_URL = '/lifts/buildings/'
+# URL для перенаправления неавторизованных пользователей на страницу входа
+LOGIN_URL = '/'
