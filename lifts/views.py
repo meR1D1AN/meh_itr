@@ -1,5 +1,7 @@
+from django.utils import timezone
+from django.contrib import messages
+
 from django.contrib.auth.forms import AuthenticationForm
-from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views import View
@@ -7,8 +9,23 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from lifts.forms import TOForm
+from lifts.forms import ReplacementForm, ProblemForm
 from lifts.models import *
+
+
+class ElevatorMixin:
+    def get_elevator(self):
+        elevator_id = self.kwargs.get('pk')
+        return get_object_or_404(Elevator, pk=elevator_id)
+
+    def get_building(self):
+        elevator = self.get_elevator()
+        return elevator.buildings.first()
+
+
+class SuccessUrlMixin:
+    def get_success_url(self):
+        return reverse('lifts:elevator_detail', kwargs={'pk': self.kwargs['pk']})
 
 
 class BuildingListView(LoginRequiredMixin, ListView):
@@ -36,9 +53,11 @@ class ElevatorDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         elevator = self.get_object()
-        context['problems'] = Problem.objects.filter(elevator=elevator, resolved=False)
-        context['replacements'] = Replacement.objects.filter(elevator=elevator, resolved=False)
-        context['tos'] = TO.objects.filter(elevator=elevator)
+        context.update({
+            'problems': Problem.objects.filter(elevator=elevator).order_by('-id'),
+            'replacements': Replacement.objects.filter(elevator=elevator).order_by('-id'),
+            'tos': TO.objects.filter(elevator=elevator).order_by('-date'),
+        })
         return context
 
 
@@ -46,39 +65,19 @@ class ProblemListView(LoginRequiredMixin, ListView):
     model = Problem
 
 
-class ProblemCreateView(LoginRequiredMixin, CreateView):
+class ProblemCreateView(LoginRequiredMixin, ElevatorMixin, SuccessUrlMixin, CreateView):
     model = Problem
-    fields = ["problem"]
+    form_class = ProblemForm
 
     def form_valid(self, form):
-        elevator_id = self.kwargs['pk']
-        elevator = Elevator.objects.get(pk=elevator_id)
-
-        try:
-            building = elevator.buildings.first()  # Получаем первое здание, в котором находится лифт
-        except ObjectDoesNotExist:
-            building = None  # Если здание не найдено, устанавливаем building в None
-
-        form.instance.elevator_id = elevator_id
-        if building:
-            form.instance.buildings = building  # Устанавливаем здание в форму, если оно найдено
-
+        form.instance.elevator = self.get_elevator()
+        form.instance.buildings = self.get_building()
         return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse('lifts:elevator_detail', kwargs={'pk': self.kwargs['pk']})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        elevator_id = self.kwargs['pk']
-        elevator = Elevator.objects.get(pk=elevator_id)
-
-        try:
-            context['buildings'] = elevator.buildings.first()
-        except ObjectDoesNotExist:
-            context['buildings'] = None
-
-        context['elevator'] = elevator  # Добавляем elevator в контекст
+        context['buildings'] = self.get_building()
+        context['elevator'] = self.get_elevator()
         return context
 
 
@@ -94,39 +93,19 @@ class ReplacementList(LoginRequiredMixin, ListView):
     model = Replacement
 
 
-class ReplacementCreateView(LoginRequiredMixin, CreateView):
+class ReplacementCreateView(LoginRequiredMixin, ElevatorMixin, SuccessUrlMixin, CreateView):
     model = Replacement
-    fields = ["info_problem"]
+    form_class = ReplacementForm
 
     def form_valid(self, form):
-        elevator_id = self.kwargs['pk']
-        elevator = Elevator.objects.get(pk=elevator_id)
-
-        try:
-            building = elevator.buildings.first()  # Получаем первое здание, в котором находится лифт
-        except ObjectDoesNotExist:
-            building = None  # Если здание не найдено, устанавливаем building в None
-
-        form.instance.elevator_id = elevator_id
-        if building:
-            form.instance.buildings = building  # Устанавливаем здание в форму, если оно найдено
-
+        form.instance.elevator = self.get_elevator()
+        form.instance.buildings = self.get_building()
         return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse('lifts:elevator_detail', kwargs={'pk': self.kwargs['pk']})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        elevator_id = self.kwargs['pk']
-        elevator = Elevator.objects.get(pk=elevator_id)
-
-        try:
-            context['buildings'] = elevator.buildings.first()
-        except ObjectDoesNotExist:
-            context['buildings'] = None
-
-        context['elevator'] = elevator  # Добавляем elevator в контекст
+        context['buildings'] = self.get_building()
+        context['elevator'] = self.get_elevator()
         return context
 
 
@@ -142,40 +121,42 @@ class TOList(LoginRequiredMixin, ListView):
     model = TO
 
 
-class TOCreateView(LoginRequiredMixin, CreateView):
+class TOCreateView(LoginRequiredMixin, ElevatorMixin, SuccessUrlMixin, CreateView):
     model = TO
-    form_class = TOForm
 
     def form_valid(self, form):
-        elevator_id = self.kwargs['pk']
-        elevator = Elevator.objects.get(pk=elevator_id)
-
-        try:
-            building = elevator.buildings.first()  # Получаем первое здание, в котором находится лифт
-        except ObjectDoesNotExist:
-            building = None  # Если здание не найдено, устанавливаем building в None
-
-        form.instance.elevator_id = elevator_id
-        if building:
-            form.instance.building = building  # Устанавливаем здание в форму, если оно найдено
-
+        form.instance.elevator = self.get_elevator()
+        form.instance.building = self.get_building()
         return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse('lifts:elevator_detail', kwargs={'pk': self.kwargs['pk']})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        elevator_id = self.kwargs['pk']
-        elevator = Elevator.objects.get(pk=elevator_id)
-
-        try:
-            context['buildings'] = elevator.buildings.first()
-        except ObjectDoesNotExist:
-            context['buildings'] = None
-
-        context['elevator'] = elevator  # Добавляем elevator в контекст
+        context['buildings'] = self.get_building()
+        context['elevator'] = self.get_elevator()
         return context
+
+
+class TOAutoCreateView(LoginRequiredMixin, ElevatorMixin, SuccessUrlMixin, View):
+    def post(self, request, *args, **kwargs):
+        # Получаем текущий лифт и здание
+        elevator = self.get_elevator()
+        building = self.get_building()
+
+        # Проверяем, существует ли уже запись ТО для текущего лифта и сегодняшней даты
+        today = timezone.now().date()
+        if TO.objects.filter(elevator=elevator, date=today).exists():
+            # Если запись уже существует, возвращаем сообщение или перенаправляем обратно
+            messages.error(request, 'Сегодняшняя запись ТО уже существует.')
+            return redirect(self.get_success_url())
+
+        # Создаём запись ТО с текущей датой
+        TO.objects.create(
+            elevator=elevator,
+            building=building
+        )
+
+        # Перенаправляем обратно на детальную страницу лифта
+        return redirect(self.get_success_url())
 
 
 def home_view(request):

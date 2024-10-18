@@ -12,6 +12,7 @@ urlpatterns = [
     # ЛИФТЫ
     path('elevators/', ElevatorListView.as_view(), name='elevator_list'),
     path('elevators/<int:pk>/', ElevatorDetailView.as_view(), name='elevator_detail'),
+    path('elevators/<int:pk>/to/auto-create/', TOAutoCreateView.as_view(), name='to_auto_create'),
     # ПРОБЛЕМЫ
     path('problems/', ProblemListView.as_view(), name='problem_list'),
     path('problems/create/<int:pk>/', ProblemCreateView.as_view(), name='problem_form'),

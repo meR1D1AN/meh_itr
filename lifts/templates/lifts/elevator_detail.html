@@ -17,12 +17,12 @@
         <span class="badge badge-success">Решено</span>
         {% else %}
         <span class="badge badge-danger">Не решено</span>
-        {% endif %}
         <br>
         <form method="post" action="{% url 'lifts:problem_resolve' problem.id %}" class="d-inline">
             {% csrf_token %}
             <button type="submit" class="btn btn-success btn-sm">Решено</button>
         </form>
+        {% endif %}
     </li>
     {% empty %}
     <li class="list-group-item">Нет проблем</li>
@@ -40,12 +40,12 @@
         <span class="badge badge-success">Решено</span>
         {% else %}
         <span class="badge badge-danger">Не решено</span>
-        {% endif %}
         <br>
         <form method="post" action="{% url 'lifts:replacement_resolve' replacement.id %}" class="d-inline">
             {% csrf_token %}
             <button type="submit" class="btn btn-success btn-sm">Решено</button>
         </form>
+        {% endif %}
     </li>
     {% empty %}
     <li class="list-group-item">Нет ремонтов</li>
@@ -53,7 +53,17 @@
 </ul>
 
 <h2>ТО:
-    <a href="{% url 'lifts:to_form' elevator.id %}" class="btn btn-primary btn-sm">Добавить ТО</a>
+    <form method="post" action="{% url 'lifts:to_auto_create' elevator.id %}" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-sm">Добавить ТО</button>
+    </form>
+    {% if messages %}
+    <ul class="list-group">
+        {% for message in messages %}
+        <li class="list-group-item list-group-item-{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 </h2>
 <ul class="list-group">
     {% for to in tos %}

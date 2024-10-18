@@ -256,7 +256,7 @@ class TO(models.Model):
     elevator = models.ForeignKey(
         Elevator, on_delete=models.CASCADE, verbose_name="Лифт"
     )
-    date = models.DateField(verbose_name="Дата проведения ТО")
+    date = models.DateField(auto_now_add=True, verbose_name="Дата проведения ТО")
 
     def __str__(self):
         return f"{self.elevator} - {self.date}"
