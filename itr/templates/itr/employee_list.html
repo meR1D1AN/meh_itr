@@ -1,0 +1,39 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+<h1>Список сотрудников</h1>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Имя</th>
+        <th>Фамилия</th>
+        <th>Отчество</th>
+        <th>Дата рождения</th>
+        <th>Должность</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for employee in employees %}
+    <tr class="clickable-row" data-href="{% url 'itr:employee_detail' employee.pk %}">
+        <td>{{ employee.first_name }}</td>
+        <td>{{ employee.last_name }}</td>
+        <td>{{ employee.middle_name }}</td>
+        <td>{{ employee.date_of_birth }}</td>
+        <td>{{ employee.position }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'itr:employee_create' %}">Добавить сотрудника</a>
+
+<script>
+    // Добавляем кликабельность на строки
+    document.addEventListener("DOMContentLoaded", function() {
+        const rows = document.querySelectorAll(".clickable-row");
+        rows.forEach(function(row) {
+            row.addEventListener("click", function() {
+                window.location = row.dataset.href;
+            });
+        });
+    });
+</script>
+{% endblock %}
