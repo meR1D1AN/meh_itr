@@ -57,17 +57,17 @@
         {% csrf_token %}
         <button type="submit" class="btn btn-primary btn-sm">Добавить ТО</button>
     </form>
-    {% if messages %}
-    <ul class="list-group">
-        {% for message in messages %}
-        <li class="list-group-item list-group-item-{{ message.tags }}">{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
 </h2>
 <ul class="list-group">
     {% for to in tos %}
     <li class="list-group-item">
+        {% if messages %}
+        <ul class="list-group">
+            {% for message in messages %}
+            <li class="list-group-item list-group-item-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
         {{ to.date }}
     </li>
     {% empty %}
