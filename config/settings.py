@@ -11,7 +11,7 @@ load_dotenv(dotenv_path=dot_env)
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG")
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["mer1d1an.ru"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -99,3 +99,7 @@ LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/lifts/buildings/'
 # URL для перенаправления неавторизованных пользователей на страницу входа
 LOGIN_URL = '/'
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://mer1d1an.ru',
+]
