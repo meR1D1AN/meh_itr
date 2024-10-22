@@ -1,0 +1,769 @@
+[
+  {
+    "model": "lifts.building",
+    "pk": 1,
+    "fields": {
+      "address": "D36",
+      "elevators": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ]
+    }
+  },
+  {
+    "model": "lifts.building",
+    "pk": 2,
+    "fields": {
+      "address": "D36STR9",
+      "elevators": [
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34
+      ]
+    }
+  },
+  {
+    "model": "lifts.building",
+    "pk": 3,
+    "fields": {
+      "address": "D36STR10",
+      "elevators": [
+        35,
+        36,
+        37,
+        38,
+        39
+      ]
+    }
+  },
+  {
+    "model": "lifts.building",
+    "pk": 4,
+    "fields": {
+      "address": "D36STR11",
+      "elevators": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
+      ]
+    }
+  },
+  {
+    "model": "lifts.building",
+    "pk": 5,
+    "fields": {
+      "address": "D36STR28",
+      "elevators": [
+        46,
+        47
+      ]
+    }
+  },
+  {
+    "model": "lifts.building",
+    "pk": 6,
+    "fields": {
+      "address": "D36STR41",
+      "elevators": [
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62
+      ]
+    }
+  },
+  {
+    "model": "lifts.building",
+    "pk": 7,
+    "fields": {
+      "address": "MSTK",
+      "elevators": [
+        63
+      ]
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 1,
+    "fields": {
+      "elevator": "P1"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 2,
+    "fields": {
+      "elevator": "P2"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 3,
+    "fields": {
+      "elevator": "P3"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 4,
+    "fields": {
+      "elevator": "P4"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 5,
+    "fields": {
+      "elevator": "P5"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 6,
+    "fields": {
+      "elevator": "P6"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 7,
+    "fields": {
+      "elevator": "P7"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 8,
+    "fields": {
+      "elevator": "P8"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 9,
+    "fields": {
+      "elevator": "P9"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 10,
+    "fields": {
+      "elevator": "P12"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 11,
+    "fields": {
+      "elevator": "P13"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 12,
+    "fields": {
+      "elevator": "P14"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 13,
+    "fields": {
+      "elevator": "P15"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 14,
+    "fields": {
+      "elevator": "P16"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 15,
+    "fields": {
+      "elevator": "P17"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 16,
+    "fields": {
+      "elevator": "P18"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 17,
+    "fields": {
+      "elevator": "P19"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 18,
+    "fields": {
+      "elevator": "SV1"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 19,
+    "fields": {
+      "elevator": "SV2"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 20,
+    "fields": {
+      "elevator": "SV3"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 21,
+    "fields": {
+      "elevator": "SV4"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 22,
+    "fields": {
+      "elevator": "SV5"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 23,
+    "fields": {
+      "elevator": "SV6"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 24,
+    "fields": {
+      "elevator": "SV7"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 25,
+    "fields": {
+      "elevator": "SV8"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 26,
+    "fields": {
+      "elevator": "L_A9"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 27,
+    "fields": {
+      "elevator": "L_B9"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 28,
+    "fields": {
+      "elevator": "L_C9"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 29,
+    "fields": {
+      "elevator": "L_D9"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 30,
+    "fields": {
+      "elevator": "L_GENERAL9"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 31,
+    "fields": {
+      "elevator": "L_KOHONIE9"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 32,
+    "fields": {
+      "elevator": "L_GRUZ19"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 33,
+    "fields": {
+      "elevator": "L_GRUZ29"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 34,
+    "fields": {
+      "elevator": "L_PARK9"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 35,
+    "fields": {
+      "elevator": "L_A10"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 36,
+    "fields": {
+      "elevator": "L_B10"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 37,
+    "fields": {
+      "elevator": "L_C10"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 38,
+    "fields": {
+      "elevator": "L_GRUZ10"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 39,
+    "fields": {
+      "elevator": "L_PARK10"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 40,
+    "fields": {
+      "elevator": "L_A11"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 41,
+    "fields": {
+      "elevator": "L_B11"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 42,
+    "fields": {
+      "elevator": "L_C11"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 43,
+    "fields": {
+      "elevator": "L_GRUZ11"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 44,
+    "fields": {
+      "elevator": "L_PARK11"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 45,
+    "fields": {
+      "elevator": "L_KUHONIE11"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 46,
+    "fields": {
+      "elevator": "OTIS_MUSEI"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 47,
+    "fields": {
+      "elevator": "STEKLYANIE_MUSEI"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 48,
+    "fields": {
+      "elevator": "L1"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 49,
+    "fields": {
+      "elevator": "L2"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 50,
+    "fields": {
+      "elevator": "L3"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 51,
+    "fields": {
+      "elevator": "L4"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 52,
+    "fields": {
+      "elevator": "L5"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 53,
+    "fields": {
+      "elevator": "L6"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 54,
+    "fields": {
+      "elevator": "L7"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 55,
+    "fields": {
+      "elevator": "L8"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 56,
+    "fields": {
+      "elevator": "L9"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 57,
+    "fields": {
+      "elevator": "L10"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 58,
+    "fields": {
+      "elevator": "L11"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 59,
+    "fields": {
+      "elevator": "L12"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 60,
+    "fields": {
+      "elevator": "L13"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 61,
+    "fields": {
+      "elevator": "L14"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 62,
+    "fields": {
+      "elevator": "L15"
+    }
+  },
+  {
+    "model": "lifts.elevator",
+    "pk": 63,
+    "fields": {
+      "elevator": "MSTK_L1"
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 1,
+    "fields": {
+      "buildings": 4,
+      "elevator": 45,
+      "problem": "Нет механического замка ДК",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 2,
+    "fields": {
+      "buildings": 4,
+      "elevator": 45,
+      "problem": "Не установлена фотозавеса, которая находится в шахте лифта, прикреплена к направляющей противовеса",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 3,
+    "fields": {
+      "buildings": 4,
+      "elevator": 44,
+      "problem": "Нет механического замка ДК",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 4,
+    "fields": {
+      "buildings": 4,
+      "elevator": 40,
+      "problem": "Не работает расторможка",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 5,
+    "fields": {
+      "buildings": 3,
+      "elevator": 37,
+      "problem": "Срабатывает ошибка кнопки СТОП ESB",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 6,
+    "fields": {
+      "buildings": 2,
+      "elevator": 28,
+      "problem": "Когда приезжает на 13 этаж и в кабину кто-то входит/выходит лифт теряется, и едет искаться до 1 этажа",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 7,
+    "fields": {
+      "buildings": 5,
+      "elevator": 47,
+      "problem": "После сигнал пожар, лифт не восстанавливается в нормальную работу",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 8,
+    "fields": {
+      "buildings": 6,
+      "elevator": 50,
+      "problem": "не горят 2 лампы освещения шахты",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 9,
+    "fields": {
+      "buildings": 6,
+      "elevator": 53,
+      "problem": "Ролики кабины Б/У 2 шт.",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 10,
+    "fields": {
+      "buildings": 6,
+      "elevator": 53,
+      "problem": "На этажах, 10, 7, 4 в ДШ установлена перемычка на открытие дверей",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 11,
+    "fields": {
+      "buildings": 6,
+      "elevator": 54,
+      "problem": "На этажах, 10, 7, 4 в ДШ установлена перемычка на открытие дверей",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 12,
+    "fields": {
+      "buildings": 6,
+      "elevator": 56,
+      "problem": "Требуется выверка направляющих противовеса и направляющих кабины",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 13,
+    "fields": {
+      "buildings": 6,
+      "elevator": 56,
+      "problem": "Замена вкладышей 4 шт. кабины",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 14,
+    "fields": {
+      "buildings": 6,
+      "elevator": 56,
+      "problem": "проги -1, 17, 18 - замена",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 15,
+    "fields": {
+      "buildings": 6,
+      "elevator": 58,
+      "problem": "Не работает вентилятор кабины",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 16,
+    "fields": {
+      "buildings": 1,
+      "elevator": 24,
+      "problem": "Нажимки вызывных кнопок вверх 2 шт",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 17,
+    "fields": {
+      "buildings": 1,
+      "elevator": 1,
+      "problem": "Двери шахты, большая проблема после ударов по дверям",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 18,
+    "fields": {
+      "buildings": 1,
+      "elevator": 1,
+      "problem": "Лампа освещения шахты",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 19,
+    "fields": {
+      "buildings": 1,
+      "elevator": 4,
+      "problem": "Трансформатор освещения шахты",
+      "resolved": false
+    }
+  },
+  {
+    "model": "lifts.problem",
+    "pk": 20,
+    "fields": {
+      "buildings": 1,
+      "elevator": 17,
+      "problem": "Когда кабина на 1 этаже, а противовес доезжает на крайнего верхнего положения - звук который слышно - это нормально",
+      "resolved": false
+    }
+  }
+]
