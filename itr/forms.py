@@ -6,7 +6,7 @@ class EmployeeForm(forms.ModelForm):
     date_registration = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), label='Дата регистрации')
     date_of_birth = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), label='Дата рождения')
     hire_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), label='Дата приема на работу')
-    date_of_termination = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), label='Дата увольнения')
+    date_of_termination = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), label='Дата увольнения', required=False)
 
     class Meta:
         model = Employee

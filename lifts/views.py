@@ -39,9 +39,18 @@ class BuildingListView(LoginRequiredMixin, ListView):
 class BuildingDetailView(LoginRequiredMixin, DetailView):
     model = Building
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hide_employees_button'] = self.request.user.groups.filter(name='lift').exists()
+        return context
 
 class ElevatorListView(LoginRequiredMixin, ListView):
     model = Elevator
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hide_employees_button'] = self.request.user.groups.filter(name='lift').exists()
+        return context
 
 
 class ElevatorDetailView(LoginRequiredMixin, DetailView):
@@ -68,6 +77,11 @@ class ElevatorDetailView(LoginRequiredMixin, DetailView):
 class ProblemListView(LoginRequiredMixin, ListView):
     model = Problem
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hide_employees_button'] = self.request.user.groups.filter(name='lift').exists()
+        return context
+
 
 class ProblemCreateView(LoginRequiredMixin, ElevatorMixin, SuccessUrlMixin, CreateView):
     model = Problem
@@ -92,10 +106,18 @@ class ProblemResolveView(LoginRequiredMixin, View):
         problem.save()
         return redirect(reverse('lifts:elevator_detail', kwargs={'pk': problem.elevator.pk}))
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hide_employees_button'] = self.request.user.groups.filter(name='lift').exists()
+        return context
 
 class ReplacementList(LoginRequiredMixin, ListView):
     model = Replacement
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hide_employees_button'] = self.request.user.groups.filter(name='lift').exists()
+        return context
 
 class ReplacementCreateView(LoginRequiredMixin, ElevatorMixin, SuccessUrlMixin, CreateView):
     model = Replacement
@@ -120,10 +142,18 @@ class ReplacementResolveView(LoginRequiredMixin, View):
         replacement.save()
         return redirect(reverse('lifts:elevator_detail', kwargs={'pk': replacement.elevator.pk}))
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hide_employees_button'] = self.request.user.groups.filter(name='lift').exists()
+        return context
 
 class TOList(LoginRequiredMixin, ListView):
     model = TO
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hide_employees_button'] = self.request.user.groups.filter(name='lift').exists()
+        return context
 
 class TOCreateView(LoginRequiredMixin, ElevatorMixin, SuccessUrlMixin, CreateView):
     model = TO
@@ -162,6 +192,10 @@ class TOAutoCreateView(LoginRequiredMixin, ElevatorMixin, SuccessUrlMixin, View)
         # Перенаправляем обратно на детальную страницу лифта
         return redirect(self.get_success_url())
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hide_employees_button'] = self.request.user.groups.filter(name='lift').exists()
+        return context
 
 def home_view(request):
     if request.user.is_authenticated:
