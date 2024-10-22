@@ -1,7 +1,7 @@
 {% extends 'lifts/base.html' %}
 {% block content %}
-<h1>{{ employee }} Начальник участка: {{ employee.created_by }}</h1>
-
+<h1>{{ employee }} | Начальник участка: {{ employee.created_by.last_name }} {{ employee.created_by.first_name }}</h1>
+<br>
 <p><strong>Ф. И. О.:</strong> {{ employee.last_name }} {{ employee.first_name }} {{ employee.middle_name }}</p>
 <p><strong>Должность:</strong> {{ employee.position }}</p>
 <p><strong>Телефон:</strong> {{ employee.phone }}</p>
@@ -9,7 +9,7 @@
 <p><strong>Серия/Номер паспорта:</strong> {{ employee.serial }} {{ employee.number }}</p>
 <p><strong>Кем выдан:</strong> {{ employee.issued_by }}</p>
 <p><strong>Когда выдан:</strong> {{ employee.issued_when }}</p>
-<p><strong>Дата рождения:</strong> {{ employee.date_of_birth }}</p>
+<p><strong>Дата рождения:</strong> {{ employee.date_of_birth }} {{ employee.get_birth_date_with_age }}</p>
 <p><strong>Место рождения:</strong> {{ employee.place_of_birth }}</p>
 <p><strong>Адрес регистрации:</strong> {{ employee.addres_registration }}</p>
 <p><strong>Дата регистрации:</strong> {{ employee.date_registration }}</p>
@@ -24,7 +24,12 @@
 <p><strong>ЦОК:</strong> {{ employee.cok }}</p>
 <p><strong>Аттестация:</strong> {{ employee.attestation }}</p>
 <p><strong>Дата приема на работу:</strong> {{ employee.hire_date }}</p>
+{% if employee.date_of_termination %}
 <p><strong>Дата увольнения:</strong> {{ employee.date_of_termination }}</p>
+{% endif %}
+
+{% if employee.termination_reason %}
 <p><strong>Причина увольнения:</strong> {{ employee.termination_reason }}</p>
+{% endif %}
 <a href="{% url 'itr:employee_list' %}">Назад к списку сотрудников</a>
 {% endblock %}

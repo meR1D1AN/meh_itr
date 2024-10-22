@@ -4,8 +4,8 @@
 <table class="table table-hover">
     <thead>
     <tr>
-        <th>Имя</th>
         <th>Фамилия</th>
+        <th>Имя</th>
         <th>Отчество</th>
         <th>Дата рождения</th>
         <th>Должность</th>
@@ -14,10 +14,10 @@
     <tbody>
     {% for employee in employees %}
     <tr class="clickable-row" data-href="{% url 'itr:employee_detail' employee.pk %}">
-        <td>{{ employee.first_name }}</td>
         <td>{{ employee.last_name }}</td>
+        <td>{{ employee.first_name }}</td>
         <td>{{ employee.middle_name }}</td>
-        <td>{{ employee.date_of_birth }}</td>
+        <td>{{ employee.date_of_birth }} {{ employee.get_birth_date_with_age }}</td>
         <td>{{ employee.position }}</td>
     </tr>
     {% endfor %}
