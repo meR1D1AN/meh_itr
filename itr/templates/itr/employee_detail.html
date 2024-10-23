@@ -1,6 +1,6 @@
 {% extends 'lifts/base.html' %}
 {% block content %}
-<h1>{{ employee }} | Начальник участка: {{ employee.created_by.last_name }} {{ employee.created_by.first_name }}</h1>
+<h1>{{ employee }} | Кто заполнил/ответственный: {{ employee.created_by.last_name }} {{ employee.created_by.first_name }}</h1>
 <br>
 <p><strong>Ф. И. О.:</strong> {{ employee.last_name }} {{ employee.first_name }} {{ employee.middle_name }}</p>
 <p><strong>Должность:</strong> {{ employee.position }}</p>
