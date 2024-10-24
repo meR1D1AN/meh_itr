@@ -11,6 +11,8 @@ django = "^5.1.2"
 psycopg2-binary = "^2.9.9"
 python-dotenv = "^1.0.1"
 gunicorn = "^23.0.0"
+django-crispy-forms = "^2.3"
+crispy-bootstrap5 = "^2024.10"
 
 
 [build-system]

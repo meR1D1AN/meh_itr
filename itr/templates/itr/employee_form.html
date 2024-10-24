@@ -1,9 +1,67 @@
 {% extends 'lifts/base.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
 <h1>Добавить сотрудника</h1>
+
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Сохранить</button>
+
+    <div class="container border mt-4">
+        <!-- Первая строка: ФИО и паспортные данные -->
+        <div class="row">
+            <div class="col-md-4 mt-3">
+                <h4>ФИО</h4>
+                {{ form.last_name|as_crispy_field }}
+                {{ form.first_name|as_crispy_field }}
+                {{ form.middle_name|as_crispy_field }}
+                <br>
+                <br>
+                <h4>Метро и адрес проживания</h4>
+                {{ form.metro|as_crispy_field }}
+                {{ form.residential_address|as_crispy_field }}
+
+            </div>
+            <!-- Вторая строка: Паспортные данные -->
+            <div class="col-md-4 mt-3">
+                <h4>Паспортные данные</h4>
+                {{ form.serial|as_crispy_field }}
+                {{ form.number|as_crispy_field }}
+                {{ form.issued_by|as_crispy_field }}
+                {{ form.issued_when|as_crispy_field }}
+                {{ form.place_of_birth|as_crispy_field }}
+                {{ form.date_of_birth|as_crispy_field }}
+            </div>
+            <!-- Третья строка: СНИЛС и ИНН -->
+            <div class="col-md-4 mt-3">
+                <h4>СНИЛС и ИНН</h4>
+                {{ form.snils|as_crispy_field }}
+                {{ form.inn|as_crispy_field }}
+                <h4>ЦОК и Аттестация</h4>
+                {{ form.cok|as_crispy_field }}
+                {{ form.attestation|as_crispy_field }}
+                <div class="mt-4">
+                    <h4>Образование</h4>
+                    {{ form.education|as_crispy_field }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Вторая строка: СНИЛС и ИНН -->
+        <div class="row">
+            <div class="col-md-4 mt-3">
+                <h4>Даты</h4>
+                {{ form.hire_date|as_crispy_field }}
+                {{ form.date_of_termination|as_crispy_field }}
+                {{ form.termination_reason|as_crispy_field }}
+            </div>
+            <div class="col-md-8 mt-3 d-flex flex-column justify-content-center">
+                {% if user.is_superuser %}
+                <h4>Ответственный</h4>
+                {{ form.created_by|as_crispy_field }}
+                {% endif %}
+                <button type="submit" class="btn btn-success btn-lg w-100">Сохранить</button>
+            </div>
+        </div>
+    </div>
 </form>
 {% endblock %}

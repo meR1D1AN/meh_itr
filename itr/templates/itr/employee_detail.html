@@ -27,9 +27,8 @@
 {% if employee.date_of_termination %}
 <p><strong>Дата увольнения:</strong> {{ employee.date_of_termination }}</p>
 {% endif %}
-
 {% if employee.termination_reason %}
 <p><strong>Причина увольнения:</strong> {{ employee.termination_reason }}</p>
 {% endif %}
-<a href="{% url 'itr:employee_list' %}">Назад к списку сотрудников</a>
+<a href="{% url 'itr:employee_list' %}" class="btn btn-secondary btn-sm">Назад к списку сотрудников</a>
 {% endblock %}

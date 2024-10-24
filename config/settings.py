@@ -22,6 +22,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "lifts",
     "itr",
+    "crispy_forms",
+    "crispy_bootstrap5",
 ]
 
 MIDDLEWARE = [
@@ -103,3 +105,5 @@ LOGIN_URL = '/'
 CSRF_TRUSTED_ORIGINS = [
     'https://mer1d1an.ru',
 ]
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
