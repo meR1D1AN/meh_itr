@@ -1,0 +1,134 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+<h1>{{ employee }}</h1>
+Кто заполнил/ответственный: {{ employee.created_by.last_name }} {{ employee.created_by.first_name }}
+
+<div class="container border mt-4">
+    <div class="row">
+        <div class="col-md-4 mt-3">
+            <h4>ФИО</h4>
+            <p>{{ employee.last_name }} {{ employee.first_name }} {{ employee.middle_name }}</p>
+            <h4>Дата рождения</h4>
+            <p>{{ employee.date_of_birth }}
+                <span>(Возраст <strong>
+                    <span style="color: {% if employee.get_age > 65 %}red{% else %}black{% endif %};">{{ employee.get_age }}</span></strong>)
+            </span></p>
+            <h4>Номер телефона</h4>
+            <p>{{ employee.phone }}</p>
+            <h4>Метро и адрес проживания</h4>
+            <p><strong>Метро:</strong> {{ employee.metro }}</p>
+            <p><strong>Адрес проживания:</strong> {{ employee.residential_address }}</p>
+        </div>
+        <div class="col-md-4 mt-3">
+            <h4>Паспортные данные</h4>
+            <p><strong>Серия/Номер паспорта:</strong> {{ employee.serial }} {{ employee.number }}</p>
+            <p><strong>Кем выдан:</strong> {{ employee.issued_by }}</p>
+            <p><strong>Дата выдачи:</strong> {{ employee.issued_when }}</p>
+            <p><strong>Место рождения:</strong> {{ employee.place_of_birth }}</p>
+            <p><strong>Прописка:</strong> {{ employee.addres_registration }}</p>
+            <p><strong>Дата прописки:</strong> {{ employee.date_registration }}</p>
+        </div>
+        <div class="col-md-4 mt-3">
+            <h4>СНИЛС и ИНН</h4>
+            <p><strong>СНИЛС:</strong> {{ employee.snils }}</p>
+            <p><strong>ИНН:</strong> {{ employee.inn }}</p>
+            <h4>Образование</h4>
+            <p><strong></strong> {{ employee.education }}</p>
+            {% if employee.cok or employee.attestation %}
+                {% if employee.cok and employee.attestation %}
+                <h4>ЦОК и Аттестация</h4>
+                {% endif %}
+            {% if employee.cok %}
+            <p><strong>ЦОК:</strong>
+                <a href="{{ employee.cok.url }}"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    ЦОК
+                </a>
+            </p>
+            {% endif %}
+            {% if employee.attestation %}
+            <p><strong>Аттестация:</strong>
+                <a href="{{ employee.attestation.url }}"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    Аттестация
+                </a>
+            </p>
+            {% endif %}
+            {% endif %}
+            {% if employee.personal_data %}
+            <h4>Согласие на обработку персональных данных</h4>
+            <p><strong>Согласие:</strong>
+                <a href="{{ employee.personal_data.url }}"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    Согласие
+                </a>
+            </p>
+            {% endif %}
+        </div>
+        <div class="col-md-4 mt-3">
+            <h4>Место работы и должность</h4>
+            <p><strong>Фирма в которой работает:</strong> {{ employee.firm }}</p>
+            <p><strong>Должность:</strong> {{ employee.position }}</p>
+        </div>
+        <div class="col-md-4 mt-3">
+            <h4>Заказчики</h4>
+            {% for customer in employee.customer.all %}
+            <div class="card mb-3">
+                <div class="card-body clickable-row" data-href="{% url 'itr:customer_detail' customer.pk %}">
+                    <h5 class="card-title">
+                        Заказчик: {{ customer.customer_name }}
+                    </h5>
+                    <p class="card-text">
+                        <strong>Адрес объекта:</strong> {{ customer.address_customer }}<br>
+                        <strong>График работы:</strong> {{ customer.work_schedule }}<br>
+                        <strong>Оклад:</strong> {{ customer.salary }} руб.<br>
+                        <strong>Ответственный:</strong> {{ customer.responsible_person }}<br>
+                        <strong>Телефон:</strong> {{ customer.contact_phone }}<br>
+                        <strong>Email:</strong> {{ customer.contact_email }}
+                    </p>
+                </div>
+            </div>
+            {% empty %}
+            <p>Нет привязанных заказчиков</p>
+            {% endfor %}
+        </div>
+        <div class="col-md-4 mt-3">
+            <h4>Даты</h4>
+            <p><strong>Дата приема на работу:</strong> {{ employee.hire_date }}</p>
+            {% if employee.date_of_termination %}
+            <p><strong>Дата увольнения:</strong> {{ employee.date_of_termination }}</p>
+            {% endif %}
+            {% if employee.termination_reason %}
+            <p><strong>Причина увольнения:</strong> {{ employee.termination_reason }}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div class="container border mb-4">
+    <div class="row">
+        <div class="mt-3 mb-3">
+            <div class="btn-group w-100" role="group">
+                <a class="btn btn btn-outline-success w-100" href="{% url 'itr:employee_create' %}" role="button">Добавить</a>
+                <a class="btn btn btn-outline-warning w-100" href="{% url 'itr:employee_update' employee.pk %}"
+                   role="button">Редактировать</a>
+                <a class="btn btn btn-outline-secondary w-100" href="{% url 'itr:employee_list' %}"
+                   role="button">Назад</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // Добавляем кликабельность на строки
+    document.addEventListener("DOMContentLoaded", function() {
+        const rows = document.querySelectorAll(".clickable-row");
+        rows.forEach(function(row) {
+            row.addEventListener("click", function() {
+                window.location = row.dataset.href;
+            });
+        });
+    });
+</script>
+{% endblock %}

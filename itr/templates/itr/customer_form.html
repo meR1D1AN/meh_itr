@@ -1,0 +1,103 @@
+{% extends 'lifts/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<h1>
+    {% if is_update %}
+    Редактировать заказчика: {{ customer.customer_name }}
+    {% else %}
+    Добавить нового заказчика
+    {% endif %}
+</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="container border mt-4">
+        <div class="row">
+            <div class="col-md-4 mt-3">
+                <h4>Заказчик</h4>
+                <!-- Название заказчика и адрес -->
+                {{ form.customer_name|as_crispy_field }}
+                {{ form.address_customer|as_crispy_field }}
+            </div>
+            <div class="col-md-4 mt-3">
+                <h4>Ответственный</h4>
+                <!-- Ответственные на объекте и его контактные данные -->
+                {{ form.responsible_person|as_crispy_field }}
+                {{ form.contact_phone|as_crispy_field }}
+                {{ form.contact_email|as_crispy_field }}
+            </div>
+            <div class="col-md-4 mt-3">
+                <h4>Зарплата и график</h4>
+                <!-- ЗП, график, дата начала работы, договор -->
+                {{ form.salary|as_crispy_field }}
+                {{ form.work_schedule|as_crispy_field }}
+                {{ form.start_work|as_crispy_field }}
+                {{ form.contract|as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mt-3">
+                <h4>Исполнитель</h4>
+                <!-- Исполнитель -->
+                {{ form.firm|as_crispy_field }}
+            </div>
+            <div class="col-md-4 mt-3">
+                <h4>Ответственный</h4>
+                <!-- Ответственный -->
+                {% if user.is_superuser %}
+                {{ form.created_by|as_crispy_field }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="container border mb-4">
+        <div class="row">
+            <div class="col mt-3 mb-3">
+                <div class="btn-group w-100" role="group">
+                    <button type="submit" class="btn btn-outline-success">Сохранить</button>
+                    <a class="btn btn-outline-secondary"
+                       href="{% if is_update %}{% url 'itr:customer_detail' customer.pk %}{% else %}{% url 'itr:customer_list' %}{% endif %}"
+                       role="button">{% if is_update %}Назад{% else %}Отмена{% endif %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+</form>
+<script>
+    window.addEventListener("load", function() {
+        const workSchedule = document.querySelector('.work-schedule');
+        const startWorkField = document.querySelector('.start-work');
+
+        function toggleStartWorkField() {
+            if (workSchedule.value === '2/2') {
+                startWorkField.parentElement.style.display = 'block';
+                startWorkField.parentElement.style.opacity = 0;  // Начальное состояние для анимации
+                setTimeout(() => {
+                    startWorkField.parentElement.style.transition = 'opacity 0.5s';
+                    startWorkField.parentElement.style.opacity = 1;  // Показать с анимацией
+                }, 10);
+            } else {
+                startWorkField.parentElement.style.transition = 'opacity 0.5s';
+                startWorkField.parentElement.style.opacity = 0;  // Скрыть с анимацией
+                setTimeout(() => {
+                    startWorkField.parentElement.style.display = 'none';  // Убрать из DOM после анимации
+                }, 500);
+            }
+        }
+
+        // Инициализируем видимость поля при загрузке
+        toggleStartWorkField();
+
+        // Добавляем обработчик изменения
+        workSchedule.addEventListener('change', toggleStartWorkField);
+
+        const saveButton = document.querySelector('button[type="submit"]');
+
+        saveButton.addEventListener("click", function() {
+            setTimeout(function() {
+                window.close();
+            }, 500);  // Закрытие окна с задержкой для обработки формы
+        });
+    });
+</script>
+{% endblock %}

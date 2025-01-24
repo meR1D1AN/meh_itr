@@ -1,0 +1,26 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <form method="post" action="">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="{{ form.username.id_for_label }}" class="form-label">Логин</label>
+            <br>
+            {{ form.username }}
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.password.id_for_label }}" class="form-label">Пароль</label>
+            <br>
+            {{ form.password }}
+        </div>
+        <div class="d-grid gap-2 col-6 mx-auto">
+            <button type="submit" class="btn btn-outline-success">Войти</button>
+        </div>
+    </form>
+    {% if form.errors %}
+    <div class="alert alert-danger mt-3">
+        <p>Неверное имя пользователя или пароль. Попробуйте снова.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

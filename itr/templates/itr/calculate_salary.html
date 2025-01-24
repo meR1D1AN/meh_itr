@@ -1,0 +1,208 @@
+{% extends 'lifts/base.html' %}
+{% load humanize %}
+{% block content %}
+<h1>Расчет зарплаты для {{ customer.customer_name }}
+    <br>{{ customer.address_customer }}
+</h1>
+<div class="row">
+    <div class="col-md-12">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group d-flex justify-content-between align-items-center my-2">
+                <div>
+                    <label for="year">Год:</label>
+                    {{ month_year_form.year }}
+                    <label for="month">Месяц:</label>
+                    {{ month_year_form.month }}
+                    <button type="submit" name="show" class="btn btn-primary my-2">Показать</button>
+                </div>
+            </div>
+            <div>
+                <strong>График: {{ customer.work_schedule }}</strong>
+            </div>
+            <div>
+                <strong>Зарплата на этом объекте: {{ customer.salary|intcomma }} руб.</strong>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if days_in_month %}
+<div class="row mt-4">
+    <div class="col-md-12">
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Добавляем скрытые поля для передачи месяца и года -->
+            <input type="hidden" name="month" value="{{ month_year_form.month.value }}">
+            <input type="hidden" name="year" value="{{ month_year_form.year.value }}">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th class="sticky-column">ФИО</th>
+                        {% for day in days_in_month %}
+                        <th {% if day in weekends %}class="bg-secondary text-white" {% endif %}>{{ day }}</th>
+                        {% endfor %}
+                        <th>Смен</th>
+                        <th>Зарплата</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for data in salary_data %}
+                    <tr>
+                        <td class="sticky-column">{{ data.employee }}</td>
+                        {% for day in days_in_month %}
+                        <td {% if day in weekends %}class="bg-secondary text-white" {% endif %}>
+                            <label class="checkbox-container">
+                                <input type="checkbox"
+                                       class="custom-checkbox"
+                                       name="workday_{{ data.employee.id }}_{{ day }}"
+                                       {% if day in data.workday_days %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                            </label>
+                        </td>
+                        {% endfor %}
+                        <!-- Количество смен -->
+                        <td class="text-center">{{ data.total_shifts }}</td>
+                        <!-- Общая зарплата -->
+                        <td class="text-center"><strong>{{ data.total_salary|intcomma }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="container border mb-4">
+                <div class="row">
+                    <div class="mt-3 mb-3">
+                        <div class="btn-group w-100" role="group">
+                            <button type="submit" name="save" class="btn btn btn-outline-success w-100">Сохранить
+                            </button>
+                            <button type="button" onclick="clearAllCheckboxes()" class="btn btn-outline-danger w-100">
+                                Очистить все дни
+                            </button>
+                            <a class="btn btn btn-outline-secondary w-100"
+                               href="{% url 'itr:customer_detail' customer.pk %}" role="button">Назад</a>
+                        </div>
+                        {% if user.is_superuser %}
+                        <a href="{% url 'itr:customer_excel' customer.pk %}?month={{ month_year_form.month.value }}&year={{ month_year_form.year.value }}"
+                           class="btn btn-outline-primary w-100 mt-2">Скачать график</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Добавляем JavaScript в конец блока content -->
+<script>
+    function clearAllCheckboxes() {
+        // Выбираем все чекбоксы в таблице
+        const checkboxes = document.querySelectorAll('table input[type="checkbox"]');
+
+        // Снимаем выделение со всех чекбоксов
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+        // Можно добавить подтверждение
+        if(confirm('Вы уверены, что хотите очистить все рабочие дни?')) {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+    }
+</script>
+
+<style>
+    /* Для sticky-колонки с ФИО */
+    .sticky-column {
+        width: 150px;       /* Автоматическая ширина */
+        min-width: 200px;
+        max-width: 200px;
+        position: sticky;
+        left: 0;
+        background: white;
+        z-index: 2;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+
+    /* Добавьте эти стили */
+    .table {
+        table-layout: fixed; /* Фиксированная ширина столбцов */
+        width: 100%;
+    }
+
+    /* Стили для ячеек с днями */
+    th:not(.sticky-column),
+    td:not(.sticky-column) {
+        width: 30px; /* Фиксированная ширина для всех ячеек с днями */
+        min-width: 30px;
+        max-width: 30px;
+        padding: 4px !important; /* Уменьшаем отступы */
+        text-align: center;
+    }
+
+    /* Для последних двух колонок (смены и зарплата) */
+    th:last-child, td:last-child,
+    th:nth-last-child(2), td:nth-last-child(2) {
+        width: 100px; /* Ширина для колонок с цифрами */
+        min-width: 100px;
+        max-width: 100px;
+    }
+
+    /* Стили для кастомных чекбоксов */
+    .checkbox-container {
+        display: block;
+        width: 100%;
+        height: 100%;
+        min-height: 40px; /* Минимальная высота ячейки */
+        cursor: pointer;
+        position: relative;
+    }
+
+    .custom-checkbox {
+        opacity: 0; /* Скрываем оригинальный чекбокс */
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        margin: 0;
+    }
+
+    /* Стили для визуального отображения чекбокса */
+    .custom-checkbox + .checkmark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 20px;
+        height: 20px;
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        background-color: white;
+        transition: all 0.3s;
+    }
+
+    /* Стиль при активации */
+    .custom-checkbox:checked + .checkmark {
+        background-color: #28a745; /* Зеленый цвет */
+        border-color: #28a745;
+    }
+
+    /* Галочка (опционально) */
+    .custom-checkbox:checked + .checkmark:after {
+        content: "";
+        position: absolute;
+        left: 35%;
+        top: 30%;
+        width: 30%;
+        height: 30%;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+</style>
+{% endif %}
+{% endblock %}

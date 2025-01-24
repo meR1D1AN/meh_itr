@@ -1,0 +1,11 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+<h1>Список проведённых ТО</h1>
+<div class="list-group">
+    {% for to in object_list %}
+    <a href="#" class="list-group-item list-group-item-action btn btn-primary mb-2">
+        {{ to }}
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

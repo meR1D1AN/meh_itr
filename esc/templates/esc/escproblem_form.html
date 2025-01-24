@@ -1,0 +1,28 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+<h1 style="text-align: center;">Добавить проблему</h1>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group" style="text-align: center;">
+        <label for="id_problem"><strong>Информация о проблеме:</strong></label>
+        <br>
+        {{ form.problem }}
+        <style>
+            textarea, input {
+                width: 100%;  /* Полная ширина */
+                box-sizing: border-box;  /* Учитывать отступы и границы в ширину */
+            }
+        </style>
+    </div>
+    <div class="container border mb-4">
+        <div class="row">
+            <div class="col mt-3 mb-3">
+                <div class="btn-group w-100" role="group">
+                    <button type="submit" class="btn btn-outline-success">Добавить</button>
+                    <a href="{% url 'esc:escalator_detail' esc.id %}" class="btn btn-outline-secondary">Назад к эскалатору</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

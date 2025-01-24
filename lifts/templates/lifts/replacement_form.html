@@ -1,0 +1,28 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+<h1 style="text-align: center;">Добавить Ремонт</h1>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group" style="text-align: center;">
+        <lable for="id_info_problem"><strong>Что стоит отремотировать/заменить:</strong></lable>
+        <br>
+        {{ form.info_problem }}
+        <style>
+            textarea, input {
+                width: 100%;
+                box-sizing: border-box;
+            }
+        </style>
+    </div>
+    <div class="container border mb-4">
+        <div class="row">
+            <div class="col mt-3 mb-3">
+                <div class="btn-group w-100" role="group">
+                    <button type="submit" class="btn btn-outline-success">Добавить</button>
+                    <a href="{% url 'lifts:elevator_detail' elevator.id %}" class="btn btn-outline-secondary">Назад к лифту</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

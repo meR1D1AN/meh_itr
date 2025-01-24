@@ -1,0 +1,12 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+<h1>Список зданий</h1>
+<div class="row">
+    {% for building in object_list %}
+    <div class="col-md-4 mb-2">
+        <a href="{% url 'lifts:building_detail' building.id %}" class="btn btn-primary btn-sm w-100">
+            {{ building.get_address_display }} (количество лифтов: {{ building.elevators.count }})</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

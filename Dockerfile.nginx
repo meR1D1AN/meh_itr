@@ -1,0 +1,10 @@
+FROM nginx:latest
+
+RUN apt-get update && \
+    apt-get install -y certbot python3-certbot-nginx && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY renew-certbot.sh /renew-certbot.sh
+RUN chmod +x /renew-certbot.sh
+
+CMD ["sh", "-c", "nginx -g 'daemon off;' & /renew-certbot.sh"]

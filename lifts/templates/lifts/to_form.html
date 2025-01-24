@@ -1,0 +1,12 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+<h1>Добавить ТО</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Добавить</button>
+    {% if elevator %}
+    <a href="{% url 'lifts:elevator_detail' elevator.id %}" class="btn btn-secondary">Назад к лифту</a>
+    {% endif %}
+</form>
+{% endblock %}

@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "meh"
+version = "0.1.0"
+description = ""
+authors = ["Никита Шидогубов <nikita@mer1d1an.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "^5.1.2"
+psycopg2-binary = "^2.9.9"
+python-dotenv = "^1.0.1"
+gunicorn = "^23.0.0"
+django-crispy-forms = "^2.3"
+crispy-bootstrap5 = "^2024.10"
+openpyxl = "^3.1.5"
+poetry = "^2.0.1"
+gevent = "^24.11.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

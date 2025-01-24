@@ -1,0 +1,66 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+<div class="text-center"><h1>Список сотрудников</h1></div>
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Ф.И.О.</th>
+                <th>Начало отпуска</th>
+                <th>Конец отпуска</th>
+                <th>Статус</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for vacation in vacations %}
+            <tr class="clickable-row" data-href="{% url 'itr:vacation_detail' vacation.pk %}">
+                {% if vacation.employee == None %}
+                <td>{{ vacation.user.last_name }} {{ vacation.user.first_name|slice:":1:" }}.</td>
+                {% else %}
+                <td>{{ vacation.employee.last_name }} {{ vacation.employee.first_name|slice:":1:" }}. {% if vacation.employee.middle_name %}{{ vacation.employee.middle_name|slice:":1:" }}.{% endif %}</td>
+                {% endif %}
+                <td>{{ vacation.start_date }}</td>
+                <td>{{ vacation.end_date }}</td>
+                <td>
+                    {% if vacation.status == 'approved' %}
+                    <span style="color: green; font-weight: bold;">
+                        {{ vacation.get_status_display }}
+                    </span>
+                    {% elif vacation.status == 'pending' %}
+                    <span style="font-weight: bold;">
+                        {{ vacation.get_status_display }}
+                    </span>
+                    {% elif vacation.status == 'rejected' %}
+                    <span style="color: red; font-weight: bold;">
+                        {{ vacation.get_status_display }}
+                    </span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="container border mb-4">
+        <div class="row">
+            <div class="col mt-3 mb-3">
+                <div class="btn-group w-100" role="group">
+                    <a href="{% url 'itr:vacation_create' %}" class="btn btn-outline-success">Добавить отпуск</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // Добавляем кликабельность на строки
+    document.addEventListener("DOMContentLoaded", function() {
+        const rows = document.querySelectorAll(".clickable-row");
+        rows.forEach(function(row) {
+            row.addEventListener("click", function() {
+                window.location = row.dataset.href;
+            });
+        });
+    });
+</script>
+{% endblock %}

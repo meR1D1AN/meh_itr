@@ -1,0 +1,91 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+{% load days_filters %}
+{% if messages %}
+{% for message in messages %}
+<div class="mt-2 alert alert-warning {% if message.tags %}alert-{{ message.tags }}{% endif %}"
+     style="text-align: center; font-weight: bold; color: red;">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+<h1>Детали отпуска</h1>{{ vacation }}<br>
+<div class="container border mt-2">
+    <div class="row">
+        <div class="col-md-4 mt-3">
+            {% if vacation.employee == None %}
+            <p>ФИО ИТР: {{ vacation.user.last_name }} {{ vacation.user.first_name|slice:":1:" }}.</p>
+            {% else %}
+            <p>ФИО сотрудника: {{ vacation.employee }}</p>
+            {% endif %}
+
+        </div>
+        <div class="col-md-4 mt-3">
+            <p>Начало отпуска: {{ vacation.start_date }}</p>
+            <p>Кол-во дней отпуска: {{ vacation.vacation_days|get_days_text }}</p>
+            <p>Окончание отпуска: {{ vacation.end_date }}</p>
+        </div>
+        <div class="col-md-4 mt-3">
+            <p>Статус:
+                {% if vacation.status == 'approved' %}
+                <span style="color: green; font-weight: bold;">
+                    {{ vacation.get_status_display }}
+                </span>
+                {% elif vacation.status == 'pending' %}
+                <span style="font-weight: bold;">
+                    {{ vacation.get_status_display }}
+                </span>
+                {% elif vacation.status == 'rejected' %}
+                <span style="color: red; font-weight: bold;">
+                    {{ vacation.get_status_display }}
+                </span>
+                {% endif %}
+            </p>
+            {% if vacation.application_file %}
+            <p>Заявление:
+                <a href="{{ vacation.application_file.url }}"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    {{ vacation.application_file.name }}
+                </a>
+            </p>
+            {% endif %}
+            {% if user.is_superuser %}
+            <p>Создан: {{ vacation.created_at }}</p>
+            <p>Обновлена: {{ vacation.updated_at }}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<form method="post" action="{% url 'itr:vacation_approve' vacation.pk %}">
+    {% csrf_token %}
+    <div class="container border mb-4">
+        <div class="row">
+            <div class="mt-3 mb-3">
+                <div class="btn-group w-100" role="group">
+                    {% if user.is_superuser %}
+                    <button type="submit" class="btn btn-outline-success btn-small-padding" name="status"
+                            value="approved">
+                        Согласовать
+                    </button>
+                    <button type="submit" class="btn btn-outline-danger btn-small-padding" name="status"
+                            value="rejected">
+                        Отклонить
+                    </button>
+                    {% endif %}
+                    {% if vacation.status != 'approved' or user.is_superuser %}
+                    <a class="btn btn btn-outline-warning btn-small-padding"
+                       href="{% url 'itr:vacation_update' vacation.pk %}"
+                       role="button">Редактировать</a>
+                    {% endif %}
+                    <a class="btn btn btn-outline-secondary btn-small-padding" href="{% url 'itr:vacation_list' %}"
+                       role="button">Назад</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% endblock %}

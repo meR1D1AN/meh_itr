@@ -1,0 +1,81 @@
+{% extends 'lifts/base.html' %}
+{% load days_filters %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Профиль пользователя {{ user.last_name }} {{ user.first_name }}
+                        {{ user.middle_name|default:"" }}</h3>
+                </div>
+                <div class="card-body table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th class="text-end">Электронная почта:</th>
+                            <td>{{ user.email }}</td>
+                            <th class="text-end">Номер телефона:</th>
+                            <td>{{ user.phone }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-end align-middle">
+                                Кол-во закреплённых сотрудников: {{ user.employees.count }}
+                            </th>
+                            <td>
+                                <a href="{% url 'itr:employee_list' %}"
+                                   class="btn btn-outline-primary">Список сотрудников</a>
+                            </td>
+                            <th class="text-end align-middle">
+                                Кол-во закреплённых заказчиков: {{ user.customers.count }}
+                            </th>
+                            <td>
+                                <a href="{% url 'itr:customer_list' %}"
+                                   class="btn btn-outline-primary">Список заказчиков</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th colspan="1" class="text-end align-middle" >Отпуск:</th>
+                            <td colspan="2" class="align-middle">
+                                {% if vacations %}
+                                {% for vacation in vacations %}
+                                <div>
+                                    Отпуск с {{ vacation.start_date|date:"d.m.Y" }}
+                                    по {{ vacation.end_date|date:"d.m.Y" }} на {{ vacation.vacation_days|get_days_text }}
+                                    {% if vacation.status == 'approved' %}
+                                    <span style="color: green; font-weight: bold;">
+                                        {{ vacation.get_status_display }}
+                                    </span>
+                                    {% elif vacation.status == 'pending' %}
+                                    <span style="font-weight: bold;">
+                                        {{ vacation.get_status_display }}
+                                    </span>
+                                    {% elif vacation.status == 'rejected' %}
+                                    <span style="color: red; font-weight: bold;">
+                                    {{ vacation.get_status_display }}
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                                {% else %}
+                                Нет отпусков
+                                {% endif %}
+                            </td>
+                            <td colspan="1" class="align-middle">
+                                <div class="btn-group text-start mt-2 mb-2" role="group">
+                                    <a href="{% url 'itr:vacation_create' %}" class="btn btn-outline-success">Добавить отпуск</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'users:edit_profile' %}" class="btn btn-outline-primary w-100">Редактировать
+                            профиль</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+<h1>{{ esc.get_esc_display }}</h1>
+
+<!-- Проблемы -->
+<h2>Проблемы:
+    <a href="{% url 'esc:problem_form' esc.id %}" class="btn btn-primary btn-sm">Добавить</a>
+</h2>
+<ul class="list-group">
+    {% for problem in problems %}
+    <li class="list-group-item">
+        {{ problem.create_at }}<br>
+        {{ problem.problem }}
+        {% if problem.resolved %}
+        <span class="badge badge-success">Решено</span>
+        {% else %}
+        <span class="badge badge-danger">Не решено</span>
+        <br>
+        <form method="post" action="{% url 'esc:problem_resolve' problem.id %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-sm">Решено</button>
+        </form>
+        {% endif %}
+    </li>
+    {% empty %}
+    <li class="list-group-item">Нет проблем</li>
+    {% endfor %}
+</ul>
+
+<!-- Замены -->
+<h2>Что стоит заменить:
+    <a href="{% url 'esc:replace_form' esc.id %}" class="btn btn-primary btn-sm">Добавить</a>
+</h2>
+<ul class="list-group">
+    {% for replace in replaces %}
+    <li class="list-group-item">
+        {{ replace.create_at }}<br>
+        {{ replace.replace }}
+        {% if replace.resolved %}
+        <span class="badge badge-success">Решено</span>
+        {% else %}
+        <span class="badge badge-danger">Не решено</span>
+        <br>
+        <form method="post" action="{% url 'esc:replace_resolve' replace.id %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-sm">Решено</button>
+        </form>
+        {% endif %}
+    </li>
+    {% empty %}
+    <li class="list-group-item">Нет замен</li>
+    {% endfor %}
+</ul>
+
+<!-- ТО -->
+<h2>ТО:
+    <form method="post" action="{% url 'esc:to_auto_create' esc.id %}" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-sm">Добавить</button>
+    </form>
+</h2>
+
+
+<ul class="list-group">
+    {% for to in tos %}
+    <li class="list-group-item">
+        {% if messages %}
+        <ul class="list-group">
+            {% for message in messages %}
+            <li class="list-group-item list-group-item-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {{ to.create_at }}
+    </li>
+    {% empty %}
+    <li class="list-group-item">Нет ТО</li>
+    {% endfor %}
+</ul>
+
+<a class="btn btn-secondary btn-sm w-100 mt-2" href="{% url 'esc:escalator_list' %}">Назад к списку эскалаторов</a>
+{% endblock %}

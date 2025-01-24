@@ -1,0 +1,80 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+<div class="text-center"><h1>Список заказчиков</h1></div>
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Заказчик</th>
+                <th>Адрес</th>
+                <th>Данные ответственного на объекте</th>
+                <th>Работающие сотрудники</th>
+                <th>Кто ведёт объект</th>
+                <th>Фирма</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for customer in customers %}
+            <tr class="clickable-row" data-href="{% url 'itr:customer_detail' customer.pk %}">
+                <td>{{ customer.customer_name }}</td>
+                <td>{{ customer.address_customer }}</td>
+                <td>{{ customer.responsible_person }}<br>
+                    {{ customer.contact_phone }}<br>
+                    {% if customer.contact_email %}
+                    <a href="mailto:{{ customer.contact_email }}">{{ customer.contact_email }}</a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if customer.employees.all %}
+                    {% for employee in customer.employees.all %}
+                    {{ employee.last_name }} {{ employee.first_name|slice:":1" }}.
+                    {% if employee.middle_name %}
+                    {{ employee.middle_name|slice:":1" }}.{% endif %}<br>
+                    {% endfor %}
+                    {% else %}
+                    <em>Нет сотрудников</em>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if customer.created_by %}
+                    {{ customer.created_by }}
+                    {% else %}
+                    <em>ИТР не назначен</em>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if customer.firm %}
+                    {{ customer.firm }}
+                    {% else %}
+                    <em>Нет данных</em>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="container border mb-4">
+        <div class="row">
+            <div class="col mt-3 mb-3">
+                <div class="btn-group w-100" role="group">
+                    <a href="{% url 'itr:customer_create' %}" class="btn btn-outline-success">Добавить
+                        заказчика</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // Добавляем кликабельность на строки
+    document.addEventListener("DOMContentLoaded", function() {
+        const rows = document.querySelectorAll(".clickable-row");
+        rows.forEach(function(row) {
+            row.addEventListener("click", function() {
+                window.location = row.dataset.href;
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+<h1>{{ customer }}</h1>
+<div class="container border mt-4">
+    <div class="row">
+        <div class="col-md-4 mt-3">
+            <h4>Заказчик</h4>
+            <p><strong></strong> {{ customer.customer_name }}</p>
+            <p><strong>Адрес объекта:</strong> {{ customer.address_customer }}</p>
+            <h4>Исполнитель</h4>
+            <p><strong></strong> {{ customer.firm }}</p>
+            <p><strong>Ответственный:</strong>
+                {{ customer.created_by.last_name }} {{ customer.created_by.first_name|slice:"1" }}.</p>
+        </div>
+        <div class="col-md-4 mt-3">
+            <h4>Информация</h4>
+            <p><strong>Зарплата:</strong> {{ customer.salary }} руб.</p>
+            <p><strong>График на объекте:</strong> {{ customer.work_schedule }}</p>
+            {% if customer.work_schedule == '1/3' %}
+            <p><strong>Начало работы:</strong> {{ customer.start_work }}</p>
+            {% endif %}
+            {% if customer.contract %}
+            <p><strong>Договор:</strong>
+                <a href="{{ customer.contract.url }}"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    Договор
+                </a>
+            </p>
+            {% endif %}
+        </div>
+        <div class="col-md-4 mt-3">
+            <h4>Контакты</h4>
+            <p><strong>ФИО:</strong> {{ customer.responsible_person }}</p>
+            <p><strong>Телефон:</strong> {{ customer.contact_phone }}</p>
+            {% if customer.contact_email %}
+            <p><strong>@email:</strong>
+                <a href="mailto:{{ customer.contact_email }}">{{ customer.contact_email }}</a>
+            </p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8 mt-3">
+            <h4>Список сотрудников, которые работают на этом объекте</h4>
+            {% for employee in customer.employees.all %}
+            <p><a href="{% url 'itr:employee_detail' employee.pk %}" class="btn btn-outline-success"> {{ employee }}</a>
+            </p>
+            {% endfor %}
+        </div>
+        <div class="col-4 mt-3">
+            <h4>Расчёт зарплаты</h4>
+            <p><a href="{% url 'itr:calculate_salary' customer.pk %}" class="btn btn-outline-success">Расчитать ЗП на
+                этом объекте</a></p>
+        </div>
+    </div>
+</div>
+<div class="container border mb-4">
+    <div class="row">
+        <div class="mt-3 mb-3">
+            <div class="btn-group w-100" role="group">
+                <a class="btn btn btn-outline-success w-100" href="{% url 'itr:customer_create' %}" role="button">Добавить</a>
+                <a class="btn btn btn-outline-warning w-100" href="{% url 'itr:customer_update' customer.pk %}"
+                   role="button">Редактировать</a>
+                <a class="btn btn btn-outline-secondary w-100" href="{% url 'itr:customer_list' %}"
+                   role="button">Назад</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

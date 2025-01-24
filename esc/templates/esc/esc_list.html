@@ -1,0 +1,54 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+<h2>Кол-во проблем: {{ problems|length }}</h2>
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Эскалатор</th>
+                    <th>Проблема</th>
+                    <th>Дата</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for problem in problems %}
+                <tr class="clickable-row" data-href="{% url 'esc:escalator_detail' problem.esc.id %}">
+                    <td>{{ problem.esc.get_esc_display }}</td>
+                    <td>{{ problem.problem }}</td>
+                    <td>{{ problem.create_at|date:"d.m.Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Нет проблем</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<h1>Список Эскалаторов</h1>
+{% for prefix, escalators in object_list.items %}
+<div class="row">
+
+    <h2>{{ prefix }}</h2>
+    {% for esc in escalators %}
+    <div class="col-md-2 mb-2">
+        <a href="{% url 'esc:escalator_detail' esc.id %}" class="btn btn-primary btn-sm w-100">
+            {{ esc.get_esc_display }}</a>
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}
+<script>
+    // Добавляем кликабельность на строки
+    document.addEventListener("DOMContentLoaded", function() {
+        const rows = document.querySelectorAll(".clickable-row");
+        rows.forEach(function(row) {
+            row.addEventListener("click", function() {
+                window.location = row.dataset.href;
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'lifts/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<h1>
+    {% if is_update %}
+    Редактировать отпуск: {{ vacation }}
+    {% else %}
+    Добавить отпуск
+    {% endif %}
+</h1>
+
+{% if current_status == 'approved' %}
+<div class="alert alert-warning">
+    Внимание: этот отпуск уже согласован и может быть отредактирован только администратором.
+</div>
+{% endif %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="container border mt-4">
+        <div class="row">
+            <div class="col-md-4 mt-3">
+                <h6>Это поле только для выбора отпуска сотрудника</h6>
+                {{ form.employee|as_crispy_field }}
+                {% if user.is_superuser %}
+                <h4>ИТР</h4>
+                {{ form.user|as_crispy_field }}
+                {% endif %}
+            </div>
+            <div class="col-md-4 mt-3">
+                <h4>Начало отпуска</h4>
+                {{ form.start_date|as_crispy_field }}
+                <h4>Конец отпуска</h4>
+                {{ form.end_date|as_crispy_field }}
+            </div>
+            <div class="col-md-4 mt-3 mb-3">
+                {% if user.is_superuser %}
+                <h4>Статус</h4>
+                {{ form.status|as_crispy_field }}
+                {% endif %}
+                <h4>Заявление</h4>
+                {{ form.application_file|as_crispy_field }}
+                <span style="color: red; font-weight: bold;">
+                Загружать заявление нужно за 14 дней, до начала отпуска
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="container border mb-4">
+        <div class="row">
+            <div class="col mt-3 mb-3">
+                <div class="btn-group w-100" role="group">
+                    <button type="submit" class="btn btn-outline-success">Сохранить</button>
+                    <a class="btn btn-outline-secondary"
+                       href="{% if is_update %}{% url 'itr:vacation_detail' vacation.pk %}{% else %}{% url 'itr:vacation_list' %}{% endif %}"
+                       role="button">{% if is_update %}Назад{% else %}Отмена{% endif %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,167 @@
+{% extends "lifts/base.html" %}
+
+{% block content %}
+<h2>Результаты поиска для: "{{ query }}"</h2>
+
+{# Проверяем, если есть сотрудники и заказчики #}
+{% if employee_results and not customer_results %}
+<div>
+    <h3>Сотрудники:</h3>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Ф.И.О.</th>
+                <th>Работает в</th>
+                <th>Заказчик и адрес</th>
+                <th>График работы и ЗП</th>
+                <th>ИТР</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for employee in employee_results %}
+            {% for customer in employee.customer.all %}
+            <tr class="clickable-row" data-href="{% url 'itr:employee_detail' employee.pk %}">
+                {% if forloop.first %}
+                <td>{{ employee.last_name }} {{ employee.first_name }} {{ employee.middle_name }}</td>
+                <td>{{ employee.firm }}</td>
+                {% else %}
+                <td></td>
+                <td></td>
+                {% endif %}
+                <td>{{ customer.customer_name }}<br>{{ customer.address_customer }}</td>
+                <td>{{ customer.work_schedule }}<br>{{ customer.salary }} руб.</td>
+                <td>{{ customer.created_by.last_name }} {{ customer.created_by.first_name|slice:":1" }}.</td>
+                {% endfor %}
+            </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% elif customer_results and not employee_results %}
+<div>
+    <h3>Заказчики:</h3>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Заказчик и адрес</th>
+                <th>Ответственный на объекте</th>
+                <th>Номер телефона</th>
+                <th>@email</th>
+                <th>Список сотрудников</th>
+                <th>ИТР</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for customer in customer_results %}
+            <tr class="clickable-row" data-href="{% url 'itr:customer_detail' customer.pk %}">
+                <td>{{ customer.customer_name }}<br>{{ customer.address_customer }}</td>
+                <td>{{ customer.responsible_person }}</td>
+                <td>{{ customer.contact_phone }}</td>
+                <td>{{ customer.contact_email }}</td>
+                <td>
+                    {% for employee in customer.employees.all %}
+                    {{ employee.last_name }} {{ employee.first_name|slice:":1" }}. {{ employee.middle_name|slice:":1"   }}.<br>
+                    График: {{ customer.work_schedule }}<br>
+                    ЗП: {{ customer.salary }}
+                    {% if not forloop.last %}
+                    <hr>
+                    {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ customer.created_by.last_name }} {{ customer.created_by.first_name|slice:":1" }}.</td>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% elif employee_results and customer_results %}
+<div>
+    <h3>Сотрудники:</h3>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Ф.И.О.</th>
+                <th>Работает в</th>
+                <th>Заказчик и адрес</th>
+                <th>График работы и ЗП</th>
+                <th>ИТР</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for employee in employee_results %}
+            {% for customer in employee.customer.all %}
+            <tr class="clickable-row" data-href="{% url 'itr:employee_detail' employee.pk %}">
+                {% if forloop.first %}
+                <td>{{ employee.last_name }} {{ employee.first_name }} {{ employee.middle_name }}</td>
+                <td>{{ employee.firm }}</td>
+                {% else %}
+                <td></td>
+                <td></td>
+                {% endif %}
+                <td>{{ customer.customer_name }}<br>{{ customer.address_customer }}</td>
+                <td>{{ customer.work_schedule }}<br>{{ customer.salary }} руб.</td>
+                <td>{{ customer.created_by.last_name }} {{ customer.created_by.first_name|slice:":1" }}.</td>
+                {% endfor %}
+            </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+<div>
+    <h3>Заказчики:</h3>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Заказчик и адрес</th>
+                <th>Ответственный на объекте</th>
+                <th>Номер телефона</th>
+                <th>@email</th>
+                <th>Список сотрудников</th>
+                <th>ИТР</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for customer in customer_results %}
+            <tr class="clickable-row" data-href="{% url 'itr:customer_detail' customer.pk %}">
+                <td>{{ customer.customer_name }}<br>{{ customer.address_customer }}</td>
+                <td>{{ customer.responsible_person }}</td>
+                <td>{{ customer.contact_phone }}</td>
+                <td>{{ customer.contact_email }}</td>
+                <td>
+                    {% for employee in customer.employees.all %}
+                    {{ employee.last_name }} {{ employee.first_name|slice:":1" }}. {{ employee.middle_name|slice:":1" }}.<br>
+                    График: {{ customer.work_schedule }}<br>
+                    ЗП : {{ customer.salary }}
+                    {% if not forloop.last %}
+                    <hr>
+                    {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ customer.created_by.last_name }} {{ customer.created_by.first_name|slice:":1" }}.</td>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% else %}
+<p>По вашему запросу ничего не найдено.</p>
+{% endif %}
+<script>
+    // Добавляем кликабельность на строки
+    document.addEventListener("DOMContentLoaded", function() {
+        const rows = document.querySelectorAll(".clickable-row");
+        rows.forEach(function(row) {
+            row.addEventListener("click", function() {
+                window.location = row.dataset.href;
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,65 @@
+services:
+  db:
+    image: postgres
+    restart: on-failure
+    env_file:
+      - .env
+    expose:
+      - 5432
+    volumes:
+      - meh_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ 'CMD-SHELL', '-c', 'pg_isready -U $POSTGRES_USER -d $POSTGRES_DB' ]
+      interval: 1s
+      retries: 2
+      timeout: 1s
+
+  app:
+    build: .
+    tty: true
+    ports:
+      - '8000:8000'
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - static_volume:/app/static  # Монтируем volume в контейнер app
+    env_file:
+      - .env
+    command: >
+      sh -c 'python3 manage.py makemigrations &&
+             python3 manage.py migrate &&
+             python3 manage.py seed_data &&
+             gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120 --worker-class gevent --max-requests 1000 --max-requests-jitter 50'
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - certbot-www:/var/www/certbot
+      - certbot-certs:/etc/letsencrypt
+      - static_volume:/app/static  # Монтируем тот же volume в контейнер nginx
+    depends_on:
+      - app
+
+  certbot:
+    image: certbot/certbot
+    restart: on-failure
+    volumes:
+      - certbot-www:/var/www/certbot
+      - certbot-certs:/etc/letsencrypt
+    command: certonly --webroot --webroot-path /var/www/certbot --email mered1an@live.com --agree-tos --no-eff-email --force-renewal -d mer1d1an.ru
+
+
+volumes:
+  static_volume:
+  meh_data:
+  certbot-www:
+  certbot-certs:

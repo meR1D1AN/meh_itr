@@ -1,0 +1,16 @@
+{% extends 'lifts/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Результаты поиска для "{{ query }}"</h2>
+    <ul>
+        {% for result in results %}
+        <li>
+            <a href="{{ result.get_absolute_url }}">{{ result }}</a>
+        </li>
+        {% empty %}
+        <li>Ничего не найдено.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

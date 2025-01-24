@@ -1,0 +1,43 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+<h1>{{ building.get_address_display }}</h1>
+<h2>Лифты в здании:</h2>
+<div class="row" id="elevator-buttons">
+    {% for elevator in building.elevators.all %}
+    <div class="col-md-3 mb-2">
+        <a href="{% url 'lifts:elevator_detail' elevator.id %}" class="btn btn-primary btn-sm w-100">
+            {{ elevator.get_elevator_display }}
+        </a>
+    </div>
+    {% endfor %}
+</div>
+<a class="btn btn-secondary btn-sm w-100" href="{% url 'lifts:building_list' %}">Назад к списку зданий</a>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const elevatorButtons = document.getElementById('elevator-buttons');
+        const elevatorCount = elevatorButtons.children.length;
+        let colClass = 'col-md-3';
+
+        if (elevatorCount <= 1) {
+            colClass = 'col-md-12';
+        } else if (elevatorCount == 2) {
+            colClass = 'col-md-6';
+        } else if (elevatorCount == 5) {
+            colClass = 'col-md-2,5';
+        } else if (elevatorCount == 6) {
+            colClass = 'col-md-6';
+        } else if (elevatorCount == 9) {
+            colClass = 'col-md-4';
+        } else if (elevatorCount == 15) {
+            colClass = 'col-md-4';
+        } else if (elevatorCount == 25) {
+            colClass = 'col-md-2';
+        }
+
+        for (let i = 0; i < elevatorCount; i++) {
+            elevatorButtons.children[i].className = `col mb-2 ${colClass}`;
+        }
+    });
+</script>
+{% endblock %}

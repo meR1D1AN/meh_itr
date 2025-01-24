@@ -1,0 +1,127 @@
+{% extends 'lifts/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<h1>
+    {% if is_update %}
+    Редактировать сотрудника: {{ employee }}
+    {% else %}
+    Добавить сотрудника
+    {% endif %}
+</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="container border mt-4">
+        <!-- Первая строка: ФИО и паспортные данные -->
+        <div class="row">
+            <div class="col-md-4 mt-3">
+                <h4>ФИО</h4>
+                {{ form.last_name|as_crispy_field }}
+                {{ form.first_name|as_crispy_field }}
+                {{ form.middle_name|as_crispy_field }}
+                {{ form.date_of_birth|as_crispy_field }}
+                <h4>Номер телефона</h4>
+                {{ form.phone|as_crispy_field }}
+                <h4>Метро и адрес проживания</h4>
+                {{ form.metro|as_crispy_field }}
+                {{ form.residential_address|as_crispy_field }}
+            </div>
+            <!-- Вторая строка: Паспортные данные -->
+            <div class="col-md-4 mt-3">
+                <h4>Паспортные данные</h4>
+                <div class="d-flex gap-2">
+                    {{ form.serial|as_crispy_field }}
+                    {{ form.number|as_crispy_field }}
+                </div>
+                {{ form.issued_by|as_crispy_field }}
+                {{ form.issued_when|as_crispy_field }}
+                {{ form.place_of_birth|as_crispy_field }}
+                {{ form.addres_registration|as_crispy_field }}
+                {{ form.date_registration|as_crispy_field }}
+
+            </div>
+            <!-- Третья строка: СНИЛС и ИНН -->
+            <div class="col-md-4 mt-3">
+                <h4>СНИЛС и ИНН</h4>
+                {{ form.snils|as_crispy_field }}
+                {{ form.inn|as_crispy_field }}
+                <h4>Образование</h4>
+                {{ form.education|as_crispy_field }}
+                <h4>ЦОК и Аттестация</h4>
+                {{ form.cok|as_crispy_field }}
+                {{ form.attestation|as_crispy_field }}
+                <h4>Согласие на обработку персональных данных</h4>
+                {{ form.personal_data|as_crispy_field }}
+            </div>
+        </div>
+        <!-- Вторая строка: СНИЛС и ИНН -->
+        <div class="row">
+            <div class="col-md-4 mt-3">
+                <h4>Место работы и должность</h4>
+                {{ form.firm|as_crispy_field }}
+                {{ form.position|as_crispy_field }}
+            </div>
+            <div class="col-md-4 mt-3">
+                <h4>Заказчик</h4>
+                <div class="form-group mb-2">
+                    <label>Выберите заказчиков</label>
+                    {% for customer in form.customer.field.queryset %}
+                    <div class="form-check">
+                        <input type="checkbox"
+                               name="customer"
+                               id="customer_{{ customer.id }}"
+                               value="{{ customer.id }}"
+                               class="form-check-input"
+                               {% if customer in form.instance.customer.all %}checked{% endif %}>
+                        <label class="form-check-label" for="customer_{{ customer.id }}">
+                            {{ customer.customer_name }}<br>{{ customer.address_customer }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn btn-outline-primary mb-3 w-100" onclick="openCustomerForm()">
+                    Добавить нового заказчика
+                </button>
+            </div>
+            <div class="col-md-4 mt-3">
+                <h4>Даты</h4>
+                {{ form.hire_date|as_crispy_field }}
+                {{ form.date_of_termination|as_crispy_field }}
+                {{ form.termination_reason|as_crispy_field }}
+                {% if user.is_superuser %}
+                <h4>Ответственный</h4>
+                {{ form.created_by|as_crispy_field }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="container border mb-4">
+        <div class="row">
+            <div class="col mt-3 mb-3">
+                <div class="btn-group w-100" role="group">
+                    <button type="submit" class="btn btn-outline-success">Сохранить</button>
+                    <a class="btn btn-outline-secondary"
+                       href="{% if is_update %}{% url 'itr:employee_detail' employee.pk %}{% else %}{% url 'itr:employee_list' %}{% endif %}"
+                       role="button">{% if is_update %}Назад{% else %}Отмена{% endif %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+</form>
+<script>
+function openCustomerForm() {
+        window.open("{% url 'itr:customer_create' %}", "newCustomerWindow", "width=800,height=700");
+    }
+function addNewCustomerOption(id, name) {
+    const customerList = document.querySelector(".form-group.mb-2"); // Находим контейнер чекбоксов
+
+    const newCustomerDiv = document.createElement("div");
+    newCustomerDiv.classList.add("form-check");
+    newCustomerDiv.innerHTML = `
+        <input type="checkbox" name="customer" id="customer_${id}" value="${id}" class="form-check-input" checked>
+        <label class="form-check-label" for="customer_${id}">${name}</label>
+    `;
+    customerList.appendChild(newCustomerDiv);
+}
+</script>
+{% endblock %}

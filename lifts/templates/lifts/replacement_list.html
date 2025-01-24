@@ -1,0 +1,11 @@
+{% extends 'lifts/base.html' %}
+{% block content %}
+<h1>Список того, что стоит заменить</h1>
+<div class="list-group">
+    {% for replacement in object_list %}
+    <a href="#" class="list-group-item list-group-item-action btn btn-primary mb-2">
+        {{ replacement }}
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

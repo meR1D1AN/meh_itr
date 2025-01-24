@@ -1,0 +1,55 @@
+{% extends 'lifts/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Редактирование профиля</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="id_email" class="form-label">Электронная почта</label>
+                            <input type="email" name="email" class="form-control" id="id_email" value="{{ user.email }}"
+                                   required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_first_name" class="form-label">Имя</label>
+                            <input type="text" name="first_name" class="form-control" id="id_first_name"
+                                   value="{{ user.first_name }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_last_name" class="form-label">Фамилия</label>
+                            <input type="text" name="last_name" class="form-control" id="id_last_name"
+                                   value="{{ user.last_name }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_middle_name" class="form-label">Отчество</label>
+                            <input type="text" name="middle_name" class="form-control" id="id_middle_name"
+                                   value="{{ user.middle_name }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_phone" class="form-label">Номер телефона</label>
+                            <input type="tel" name="phone" class="form-control" id="id_phone" value="{{ user.phone }}"
+                                   required>
+                        </div>
+
+                        <div class="">
+                            <a href="{% url 'users:change_password' %}" class="btn btn-outline-secondary mb-2 w-100">Изменить пароль</a>
+                            <button type="submit" class="btn btn-outline-primary w-100">Сохранить изменения</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
