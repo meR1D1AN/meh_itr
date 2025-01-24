@@ -9,7 +9,7 @@ dot_env = os.path.join(BASE_DIR, ".env")
 load_dotenv(dotenv_path=dot_env)
 
 SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = False
+DEBUG = os.getenv("DEBUG") == "True"
 
 ALLOWED_HOSTS = ["mer1d1an.ru", "212.193.27.109", "127.0.0.1"]
 
