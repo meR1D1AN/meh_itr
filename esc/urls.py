@@ -1,6 +1,20 @@
 from django.urls import path
-from .views import *
+
 from esc import apps
+
+from .views import (
+    EscDetailView,
+    EscListView,
+    EscProblemCreateView,
+    EscProblemListView,
+    EscProblemResolveView,
+    EscReplaceCreateView,
+    EscReplaceList,
+    EscReplaceResolveView,
+    EscTOAutoCreateView,
+    EscTOList,
+)
+
 
 app_name = apps.EscConfig.name
 
@@ -15,9 +29,7 @@ urlpatterns = [
     ),
     # Проблемы
     path("problems/", EscProblemListView.as_view(), name="problem_list"),
-    path(
-        "problems/create/<int:pk>/", EscProblemCreateView.as_view(), name="problem_form"
-    ),
+    path("problems/create/<int:pk>/", EscProblemCreateView.as_view(), name="problem_form"),
     path(
         "problems/<int:pk>/resolve/",
         EscProblemResolveView.as_view(),
@@ -25,9 +37,7 @@ urlpatterns = [
     ),
     # Ремонты
     path("replaces/", EscReplaceList.as_view(), name="replace_list"),
-    path(
-        "replaces/create/<int:pk>/", EscReplaceCreateView.as_view(), name="replace_form"
-    ),
+    path("replaces/create/<int:pk>/", EscReplaceCreateView.as_view(), name="replace_form"),
     path(
         "replaces/<int:pk>/resolve/",
         EscReplaceResolveView.as_view(),

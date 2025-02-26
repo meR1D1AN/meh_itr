@@ -1,7 +1,25 @@
 from django.urls import path
-from .views import *
+
 from itr import apps
+
 from . import views
+from .views import (
+    CustomerCreateView,
+    CustomerDetailView,
+    CustomerExcelView,
+    CustomerListView,
+    CustomerUpdateView,
+    EmployeeCreateView,
+    EmployeeDetailView,
+    EmployeeListView,
+    EmployeeUpdateView,
+    VacationApproveView,
+    VacationCreateView,
+    VacationDetailView,
+    VacationListView,
+    VacationUpdateView,
+)
+
 
 app_name = apps.ItrConfig.name
 
@@ -28,9 +46,7 @@ urlpatterns = [
         views.calculate_salary,
         name="calculate_salary",
     ),
-    path(
-        "customers/<int:pk>/excel/", CustomerExcelView.as_view(), name="customer_excel"
-    ),
+    path("customers/<int:pk>/excel/", CustomerExcelView.as_view(), name="customer_excel"),
     path("vacations/", VacationListView.as_view(), name="vacation_list"),
     path("vacations/create/", VacationCreateView.as_view(), name="vacation_create"),
     path(

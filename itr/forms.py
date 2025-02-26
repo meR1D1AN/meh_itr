@@ -2,44 +2,35 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 
-from .models import Employee, Customer, WorkDay, Vacation
 from users.models import User
+
+from .models import Customer, Employee, Vacation, WorkDay
 
 
 class EmployeeForm(forms.ModelForm):
     # Используем DateInput с форматом YYYY-MM-DD
     date_registration = forms.DateField(
-        widget=forms.DateInput(
-            attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"
-        ),
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"),
         label="Дата регистрации",
         required=True,
     )
     date_of_birth = forms.DateField(
-        widget=forms.DateInput(
-            attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"
-        ),
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"),
         label="Дата рождения",
         required=True,
     )
     hire_date = forms.DateField(
-        widget=forms.DateInput(
-            attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"
-        ),
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"),
         label="Дата приема на работу",
         required=True,
     )
     issued_when = forms.DateField(
-        widget=forms.DateInput(
-            attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"
-        ),
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"),
         label="Дата выдачи паспорта",
         required=True,
     )
     date_of_termination = forms.DateField(
-        widget=forms.DateInput(
-            attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"
-        ),
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"),
         label="Дата увольнения",
         required=False,
     )
@@ -60,9 +51,7 @@ class EmployeeForm(forms.ModelForm):
 
         # Устанавливаем queryset и label для поля created_by
         self.fields["created_by"].queryset = User.objects.all()
-        self.fields["created_by"].label_from_instance = (
-            lambda obj: f"{obj.last_name} {obj.first_name[0]}."
-        )
+        self.fields["created_by"].label_from_instance = lambda obj: f"{obj.last_name} {obj.first_name[0]}."
 
         # Если пользователь не администратор, скрываем поле "created_by"
         if not user.is_superuser:
@@ -71,9 +60,7 @@ class EmployeeForm(forms.ModelForm):
 
 class CustomerForm(forms.ModelForm):
     start_work = forms.DateField(
-        widget=forms.DateInput(
-            attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"
-        ),
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"),
         label="Дата начала работы",
         help_text="Укажите дату начала работы по графику 1/3",
         required=False,
@@ -87,9 +74,7 @@ class CustomerForm(forms.ModelForm):
         super().__init__(*args, **kwargs)  # Правильный вызов super()
 
         self.fields["created_by"].queryset = User.objects.all()
-        self.fields["created_by"].label_from_instance = (
-            lambda obj: f"{obj.last_name} {obj.first_name[0]}."
-        )
+        self.fields["created_by"].label_from_instance = lambda obj: f"{obj.last_name} {obj.first_name[0]}."
         self.fields["work_schedule"].widget.attrs.update({"class": "work-schedule"})
         self.fields["start_work"].widget.attrs.update({"class": "start-work"})
 
@@ -162,16 +147,12 @@ def get_person_info(vacation):
 
 class VacationForm(forms.ModelForm):
     start_date = forms.DateField(
-        widget=forms.DateInput(
-            attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"
-        ),
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"),
         label="Дата начала отпуска",
         required=False,
     )
     end_date = forms.DateField(
-        widget=forms.DateInput(
-            attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"
-        ),
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"}, format="%Y-%m-%d"),
         label="Дата окончания отпуска",
         required=False,
     )
@@ -195,13 +176,15 @@ class VacationForm(forms.ModelForm):
         # Проверка корректности дат только для user, без проверки для employee
         if cleaned_data.get("user") and start_date and end_date:
             if start_date > end_date:
-                error_message = f'Дата начала отпуска ({start_date.strftime("%d.%m.%Y")}) не может быть позже даты окончания ({end_date.strftime("%d.%m.%Y")}).'
+                error_message = (
+                    f'Дата начала отпуска ({start_date.strftime("%d.%m.%Y")}) не может быть позже '
+                    f'даты окончания ({end_date.strftime("%d.%m.%Y")}).'
+                )
                 raise ValidationError({"start_date": error_message})
 
             # Проверка пересечения дат с существующими отпусками только для user
             existing_vacations = Vacation.objects.filter(
-                Q(user=cleaned_data.get("user"))
-                & ~Q(employee__isnull=False),  # Исключаем отпуска с employee
+                Q(user=cleaned_data.get("user")) & ~Q(employee__isnull=False),  # Исключаем отпуска с employee
                 status__in=["pending", "approved"],
                 start_date__lte=end_date,
                 end_date__gte=start_date,
@@ -218,21 +201,19 @@ class VacationForm(forms.ModelForm):
                 error_fields = {}
 
                 # Проверка start_date
-                if (
-                        start_date >= conflicting_vacations.start_date
-                        and start_date <= conflicting_vacations.end_date
-                ):
+                if start_date >= conflicting_vacations.start_date and start_date <= conflicting_vacations.end_date:
                     error_fields["start_date"] = (
-                        f'Отпуск пересекается с отпуском {person_info} с {conflicting_vacations.start_date.strftime("%d.%m.%Y")} по {conflicting_vacations.end_date.strftime("%d.%m.%Y")}'
+                        f"Отпуск пересекается с отпуском {person_info} с "
+                        f'{conflicting_vacations.start_date.strftime("%d.%m.%Y")} по '
+                        f'{conflicting_vacations.end_date.strftime("%d.%m.%Y")}'
                     )
 
                 # Проверка end_date
-                if (
-                        end_date >= conflicting_vacations.start_date
-                        and end_date <= conflicting_vacations.end_date
-                ):
+                if end_date >= conflicting_vacations.start_date and end_date <= conflicting_vacations.end_date:
                     error_fields["end_date"] = (
-                        f'Отпуск пересекается с отпуском {person_info} с {conflicting_vacations.start_date.strftime("%d.%m.%Y")} по {conflicting_vacations.end_date.strftime("%d.%m.%Y")}'
+                        f"Отпуск пересекается с отпуском {person_info} с "
+                        f'{conflicting_vacations.start_date.strftime("%d.%m.%Y")} по '
+                        f'{conflicting_vacations.end_date.strftime("%d.%m.%Y")}'
                     )
 
                 if error_fields:

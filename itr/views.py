@@ -1,37 +1,32 @@
-import urllib.parse
+# import urllib.parse
 from datetime import datetime
-from .forms import MONTHS
 
 from django import forms
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q, QuerySet
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import ListView, CreateView, DetailView, UpdateView
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from openpyxl import Workbook
-from openpyxl.styles import Alignment
+
+# from openpyxl.styles import Alignment
 from openpyxl.utils import get_column_letter
 
 from itr.excel.data_utils import get_month_days, get_workdays
 from itr.excel.filename import get_filename
 from itr.excel.get_current_month_year import get_current_month_year
 from itr.excel.styles import get_styles
-from itr.models import (
-    Employee,
-    Customer,
-    Vacation,
-    VacationStatus,
-)
-from itr.forms import (
-    CustomerForm,
-    CombinedEmployeeCustomerForm,
-    VacationForm,
-)
-from itr.salary import calculate_salary
-from itr.utils import sanitize_filename
+from itr.forms import CombinedEmployeeCustomerForm, CustomerForm, VacationForm
+from itr.models import Customer, Employee, Vacation, VacationStatus
+
+from .forms import MONTHS
+
+
+# from itr.salary import calculate_salary
+# from itr.utils import sanitize_filename
 
 
 class EmployeeListView(LoginRequiredMixin, ListView):
@@ -45,9 +40,7 @@ class EmployeeListView(LoginRequiredMixin, ListView):
             return Employee.objects.all().order_by("last_name")
         # Если обычный пользователь, показываем только тех, кого он сам создал
         else:
-            queryset = Employee.objects.filter(created_by=self.request.user).order_by(
-                "last_name"
-            )
+            queryset = Employee.objects.filter(created_by=self.request.user).order_by("last_name")
         return queryset.prefetch_related("customer")
 
 
@@ -118,9 +111,7 @@ class EmployeeDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
     def test_func(self):
         employee = self.get_object()
-        return (
-            self.request.user.is_superuser or self.request.user == employee.created_by
-        )
+        return self.request.user.is_superuser or self.request.user == employee.created_by
 
 
 class EmployeeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -135,16 +126,12 @@ class EmployeeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return kwargs
 
     def form_valid(self, form):
-        form.instance.created_by = (
-            self.request.user
-        )  # Автоматически назначаем создателя
+        form.instance.created_by = self.request.user  # Автоматически назначаем создателя
         return super().form_valid(form)
 
     def test_func(self):
         employee = self.get_object()
-        return (
-            self.request.user.is_superuser or self.request.user == employee.created_by
-        )
+        return self.request.user.is_superuser or self.request.user == employee.created_by
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -173,7 +160,8 @@ class CustomerCreateView(LoginRequiredMixin, CreateView):
         else:
             # Возвращаем JS-код для закрытия окна и обновления списка заказчиков
             return HttpResponse(
-                f"<script>window.opener.addNewCustomerOption({self.object.id}, '{self.object.customer_name}'); window.close();</script>"
+                f"<script>window.opener.addNewCustomerOption({self.object.id}, '{self.object.customer_name}'); "
+                f"window.close();</script>"
             )
 
 
@@ -187,9 +175,7 @@ class CustomerListView(LoginRequiredMixin, ListView):
         if self.request.user.is_superuser:
             return Customer.objects.all().order_by("customer_name")
         # Если обычный пользователь, показываем только тех, кого он сам создал
-        return Customer.objects.filter(created_by=self.request.user).order_by(
-            "customer_name"
-        )
+        return Customer.objects.filter(created_by=self.request.user).order_by("customer_name")
 
 
 class CustomerUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -199,16 +185,12 @@ class CustomerUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     success_url = reverse_lazy("itr:customer_list")
 
     def form_valid(self, form):
-        form.instance.created_by = (
-            self.request.user
-        )  # Автоматически назначаем создателя
+        form.instance.created_by = self.request.user  # Автоматически назначаем создателя
         return super().form_valid(form)
 
     def test_func(self):
         customer = self.get_object()
-        return (
-            self.request.user.is_superuser or self.request.user == customer.created_by
-        )
+        return self.request.user.is_superuser or self.request.user == customer.created_by
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -224,17 +206,13 @@ class CustomerDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
     def test_func(self):
         customer = self.get_object()
-        return (
-            self.request.user.is_superuser or self.request.user == customer.created_by
-        )
+        return self.request.user.is_superuser or self.request.user == customer.created_by
 
 
 class CustomerExcelView(LoginRequiredMixin, UserPassesTestMixin, View):
     def test_func(self):
         customer = get_object_or_404(Customer, pk=self.kwargs["pk"])
-        return (
-            self.request.user.is_superuser or self.request.user == customer.created_by
-        )
+        return self.request.user.is_superuser or self.request.user == customer.created_by
 
     def get(self, request, pk):
         # получаем список заказчиков
@@ -267,14 +245,10 @@ class CustomerExcelView(LoginRequiredMixin, UserPassesTestMixin, View):
             value="Табель учета использования рабочего времени лифтеров-проводников",
         ).font = styles["bold_font"]
         # График работы
-        ws.cell(row=2, column=1, value=f"График {customer.work_schedule}").font = (
-            styles["bold_font"]
-        )
+        ws.cell(row=2, column=1, value=f"График {customer.work_schedule}").font = styles["bold_font"]
         # Адрес
         ws.merge_cells(start_row=3, start_column=1, end_row=3, end_column=20)
-        ws.cell(row=3, column=1, value=f"Адрес: {customer.address_customer}").font = (
-            styles["bold_font"]
-        )
+        ws.cell(row=3, column=1, value=f"Адрес: {customer.address_customer}").font = styles["bold_font"]
         # Месяц и год
         headers_row_y = 5
         ws.cell(
@@ -300,9 +274,7 @@ class CustomerExcelView(LoginRequiredMixin, UserPassesTestMixin, View):
 
         # Добавляем "Всего смен"
         total_shifts_col = days_in_month + 2
-        ws.cell(row=headers_row, column=total_shifts_col, value="Всего смен").font = (
-            styles["bold_font"]
-        )
+        ws.cell(row=headers_row, column=total_shifts_col, value="Всего смен").font = styles["bold_font"]
         ws.cell(row=headers_row, column=total_shifts_col).border = styles["thin_border"]
         ws.cell(row=headers_row, column=total_shifts_col).alignment = styles["alignment_center"]
 
@@ -313,9 +285,7 @@ class CustomerExcelView(LoginRequiredMixin, UserPassesTestMixin, View):
         # Заполняем данные
         for row, (employee, work_days) in enumerate(employee_workdays.items(), start=7):
             # ФИО сотрудника
-            ws.cell(row=row, column=1, value=str(employee)).border = styles[
-                "thin_border"
-            ]
+            ws.cell(row=row, column=1, value=str(employee)).border = styles["thin_border"]
 
             # Заполнение дней
             for day in range(1, days_in_month + 1):
@@ -330,12 +300,8 @@ class CustomerExcelView(LoginRequiredMixin, UserPassesTestMixin, View):
                     cell.fill = styles["white_fill"]
 
             # Записываем общее количество смен
-            ws.cell(row=row, column=total_shifts_col, value=len(work_days)).border = (
-                styles["thin_border"]
-            )
-            ws.cell(
-                row=row, column=total_shifts_col, value=len(work_days)
-            ).alignment = styles["alignment_center"]
+            ws.cell(row=row, column=total_shifts_col, value=len(work_days)).border = styles["thin_border"]
+            ws.cell(row=row, column=total_shifts_col, value=len(work_days)).alignment = styles["alignment_center"]
 
         # Добавление итоговой строки ПОСЛЕ завершения цикла
         total_row = row + 1
@@ -352,9 +318,7 @@ class CustomerExcelView(LoginRequiredMixin, UserPassesTestMixin, View):
 
         # Записываем общее количество смен в ячейку, которая не является частью объединенной области
         total_shifts = sum(len(work_days) for _, work_days in employee_workdays.items())
-        ws.cell(row=total_row, column=total_shifts_col, value=total_shifts).font = (
-            styles["bold_font"]
-        )
+        ws.cell(row=total_row, column=total_shifts_col, value=total_shifts).font = styles["bold_font"]
         ws.cell(row=total_row, column=total_shifts_col).border = styles["thin_border"]
         ws.cell(row=total_row, column=total_shifts_col).alignment = styles["alignment_center"]
 
@@ -373,7 +337,7 @@ class CustomerExcelView(LoginRequiredMixin, UserPassesTestMixin, View):
                     try:
                         if cell.value and len(str(cell.value)) > max_length:
                             max_length = len(str(cell.value))
-                    except:
+                    except (TypeError, ValueError):
                         pass
             ws.column_dimensions[column_letter].width = max_length + 2
 
@@ -411,17 +375,11 @@ class CustomerExcelView(LoginRequiredMixin, UserPassesTestMixin, View):
         elif customer.firm == 'ООО Холдинг "ЦентрСервис"':
             ws.cell(row=total_row, column=6, value="___________________ Д. В. Романов")
         ws.merge_cells(range_string="S{}:AB{}".format(total_row, total_row))
-        ws.cell(
-            row=total_row, column=19, value="___________________ /________________/"
-        )
+        ws.cell(row=total_row, column=19, value="___________________ /________________/")
 
         # Сохраняем файл для скачивания
-        response = HttpResponse(
-            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        )
-        response["Content-Disposition"] = (
-            f"attachment; filename*=UTF-8''{encoded_filename}"
-        )
+        response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        response["Content-Disposition"] = f"attachment; filename*=UTF-8''{encoded_filename}"
 
         wb.save(response)
         return response
@@ -525,8 +483,7 @@ class VacationUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         """
         vacation = self.get_object()
         return self.request.user.is_superuser or (
-            vacation.user == self.request.user
-            and vacation.status != VacationStatus.APPROVED
+            vacation.user == self.request.user and vacation.status != VacationStatus.APPROVED
         )
 
     def get_form_kwargs(self):
@@ -608,4 +565,3 @@ class VacationApproveView(LoginRequiredMixin, UserPassesTestMixin, View):
 
         # Перенаправляем на страницу деталей отпуска
         return redirect("itr:vacation_detail", pk=pk)
-

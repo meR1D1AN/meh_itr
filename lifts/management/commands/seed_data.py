@@ -1,10 +1,12 @@
-from django.core.management.base import BaseCommand
-from users.models import User
-from lifts.models import *
-from esc.models import *
 import os
-from dotenv import load_dotenv
 from pathlib import Path
+
+from django.core.management.base import BaseCommand
+from dotenv import load_dotenv
+
+from esc.models import Esc, EscChoices
+from lifts.models import AddressChoices, Building, Elevator, ElevatorChoices
+from users.models import User
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -129,14 +131,10 @@ class Command(BaseCommand):
 
             # Создаем лифты и связываем их со зданием
             for elevator_name in elevators:
-                elevator, created = Elevator.objects.get_or_create(
-                    elevator=elevator_name
-                )
+                elevator, created = Elevator.objects.get_or_create(elevator=elevator_name)
                 building.elevators.add(elevator)
 
-        self.stdout.write(
-            self.style.SUCCESS("База данных успешно заполнена начальными данными")
-        )
+        self.stdout.write(self.style.SUCCESS("База данных успешно заполнена начальными данными"))
 
         esc_data = [
             EscChoices.E11,
@@ -187,20 +185,18 @@ class Command(BaseCommand):
         for esc_name in esc_data:
             Esc.objects.get_or_create(esc=esc_name)
 
-        self.stdout.write(
-            self.style.SUCCESS("Данные для эскалаторов успешно добавлены")
-        )
+        self.stdout.write(self.style.SUCCESS("Данные для эскалаторов успешно добавлены"))
 
         # Создаем администратора
-        email = "nikita.sh@gklifts.ru"
-        password = os.getenv("POSTGRES_PASSWORD")
+        email = os.getenv("ADMIN_EMAIL")
+        password = os.getenv("ADMIN_PASSWORD")
         first_name = "Никита"
         last_name = "Шидогубов"
         middle_name = "Александрович"
         phone = "+79958873107"
 
         if not User.objects.filter(email=email).exists():
-            User.objects.create_superuser(
+            User.objects.create_user(
                 email=email,
                 password=password,
                 first_name=first_name,
@@ -211,10 +207,6 @@ class Command(BaseCommand):
                 is_superuser=True,
                 is_itr=True,
             )
-            self.stdout.write(
-                self.style.SUCCESS(f"Администратор {email} успешно создан")
-            )
+            self.stdout.write(self.style.SUCCESS(f"Администратор {email} успешно создан"))
         else:
-            self.stdout.write(
-                self.style.WARNING(f"Администратор {email} уже существует")
-            )
+            self.stdout.write(self.style.WARNING(f"Администратор {email} уже существует"))

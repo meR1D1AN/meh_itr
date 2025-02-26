@@ -3,6 +3,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 dot_env = os.path.join(BASE_DIR, ".env")
@@ -92,7 +93,7 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -100,21 +101,21 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # URL для перенаправления после выхода из системы
-LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = "/"
 # URL для перенаправления после успешного входа
-LOGIN_REDIRECT_URL = '/lifts/buildings/'
+LOGIN_REDIRECT_URL = "/lifts/buildings/"
 # URL для перенаправления неавторизованных пользователей на страницу входа
-LOGIN_URL = '/'
+LOGIN_URL = "/"
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://mer1d1an.ru',
+    "https://mer1d1an.ru",
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 FILE_UPLOAD_HANDLERS = [
-    'django.core.files.uploadhandler.MemoryFileUploadHandler',
-    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+    "django.core.files.uploadhandler.MemoryFileUploadHandler",
+    "django.core.files.uploadhandler.TemporaryFileUploadHandler",
 ]
 
 AUTH_USER_MODEL = "users.User"

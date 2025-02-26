@@ -90,9 +90,7 @@ class Building(models.Model):
         verbose_name="Адрес",
         help_text="Выбери адрес",
     )
-    elevators = models.ManyToManyField(
-        "Elevator", verbose_name="Лифты", related_name="buildings", blank=True
-    )
+    elevators = models.ManyToManyField("Elevator", verbose_name="Лифты", related_name="buildings", blank=True)
 
     def __str__(self):
         return self.get_address_display()
@@ -131,9 +129,7 @@ class Problem(models.Model):
         on_delete=models.SET_NULL,
         null=True,
     )
-    elevator = models.ForeignKey(
-        Elevator, on_delete=models.CASCADE, verbose_name="Лифт", related_name="problems"
-    )
+    elevator = models.ForeignKey(Elevator, on_delete=models.CASCADE, verbose_name="Лифт", related_name="problems")
     problem = models.TextField(verbose_name="Информация о проблеме")
     resolved = models.BooleanField(default=False, verbose_name="Решено")
 
@@ -156,9 +152,7 @@ class Replacement(models.Model):
         related_name="replacements",
         on_delete=models.CASCADE,
     )
-    elevator = models.ForeignKey(
-        Elevator, on_delete=models.CASCADE, verbose_name="Лифт"
-    )
+    elevator = models.ForeignKey(Elevator, on_delete=models.CASCADE, verbose_name="Лифт")
     info_problem = models.TextField(verbose_name="Что стоит заменить")
     resolved = models.BooleanField(default=False, verbose_name="Решено")
 
@@ -182,9 +176,7 @@ class TO(models.Model):
         related_name="to",
         null=True,
     )
-    elevator = models.ForeignKey(
-        Elevator, on_delete=models.CASCADE, verbose_name="Лифт"
-    )
+    elevator = models.ForeignKey(Elevator, on_delete=models.CASCADE, verbose_name="Лифт")
     date = models.DateField(auto_now_add=True, verbose_name="Дата проведения ТО")
 
     def __str__(self):

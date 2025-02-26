@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from lifts.models import Building, Problem, Elevator, Replacement, TO
+
+from lifts.models import TO, Building, Elevator, Problem, Replacement
 
 
 @admin.register(Building)

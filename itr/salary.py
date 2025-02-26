@@ -1,14 +1,13 @@
 import calendar
 from datetime import datetime
+
 from django.shortcuts import get_object_or_404, redirect, render
 
 from itr.forms import MonthYearForm
 from itr.models import Customer, WorkDay
 
 
-def calculate_daily_salary(
-    day, month_days, monthly_salary, work_schedule, customer, year=None, month=None
-):
+def calculate_daily_salary(day, month_days, monthly_salary, work_schedule, customer, year=None, month=None):
     """
     Рассчитывает стоимость одной смены для указанного дня на основе графика работы.
     """
@@ -72,14 +71,12 @@ def calculate_daily_salary(
         elif month_days == 28:
             # Все дни делятся на 7
             return monthly_salary / 7
-        
+
     elif work_schedule == "5/2":
         # Определяем количество рабочих дней в месяце
         if year is not None and month is not None:
             working_days = sum(
-                1
-                for day in range(1, month_days + 1)
-                if calendar.weekday(year, month, day) < 5
+                1 for day in range(1, month_days + 1) if calendar.weekday(year, month, day) < 5
             )  # Пн-Пт
             if working_days > 0:  # Избегаем деления на ноль
                 return monthly_salary / working_days
@@ -87,9 +84,7 @@ def calculate_daily_salary(
         # Определяем количество рабочих дней в месяце, исключая воскресенья
         if year is not None and month is not None:
             working_days = sum(
-                1
-                for day in range(1, month_days + 1)
-                if calendar.weekday(year, month, day) != 6
+                1 for day in range(1, month_days + 1) if calendar.weekday(year, month, day) != 6
             )  # Не воскресенье
             if working_days > 0:  # Избегаем деления на ноль
                 return monthly_salary / working_days
@@ -133,9 +128,7 @@ def calculate_salary(request, pk):
                             )
                         else:
                             # Удаляем запись, если чекбокс снят
-                            WorkDay.objects.filter(
-                                employee=employee, date=date
-                            ).delete()
+                            WorkDay.objects.filter(employee=employee, date=date).delete()
                 # Перенаправляем на ту же страницу для предотвращения повторной отправки формы
                 return redirect("itr:calculate_salary", pk=pk)
     else:
@@ -151,9 +144,7 @@ def calculate_salary(request, pk):
 
     salary_data = []
     for employee in employees:
-        workdays = WorkDay.objects.filter(
-            employee=employee, date__year=year, date__month=month
-        ).order_by("date")
+        workdays = WorkDay.objects.filter(employee=employee, date__year=year, date__month=month).order_by("date")
         workday_days = [workday.date.day for workday in workdays]
         total_shifts = len(workday_days)
         total_salary = sum(workday.salary for workday in workdays)
@@ -172,9 +163,7 @@ def calculate_salary(request, pk):
     # Сортировка salary_data по фамилии
     salary_data = sorted(salary_data, key=lambda x: x["employee"].last_name)
 
-    weekends = [
-        day for day in days_in_month_list if datetime(year, month, day).weekday() >= 5
-    ]
+    weekends = [day for day in days_in_month_list if datetime(year, month, day).weekday() >= 5]
 
     context = {
         "customer": customer,

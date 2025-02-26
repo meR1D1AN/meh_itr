@@ -1,10 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
 from django.views import View
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import CreateView, DetailView, ListView
 
 from esc.forms import EscProblemForm, EscReplaceForm
 from esc.models import Esc, EscProblem, EscReplace, EscTO
@@ -38,7 +38,7 @@ class EscListView(LoginRequiredMixin, ListView):
         context["object_list"] = grouped_escalators
 
         # Добавляем все проблемы
-        context["problems"] = EscProblem.objects.filter(resolved=False).order_by('-create_at')
+        context["problems"] = EscProblem.objects.filter(resolved=False).order_by("-create_at")
 
         return context
 

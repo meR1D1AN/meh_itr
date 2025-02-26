@@ -102,9 +102,7 @@ class EscReplace(models.Model):
 
 class EscTO(models.Model):
     esc = models.ForeignKey(Esc, on_delete=models.CASCADE, verbose_name="Эскалатор")
-    create_at = models.DateTimeField(
-        auto_now_add=True, verbose_name="Дата проведения ТО"
-    )
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата проведения ТО")
 
     def __str__(self):
         return f"{self.esc} - {self.create_at}"

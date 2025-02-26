@@ -1,10 +1,10 @@
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from django.contrib.auth import update_session_auth_hash
+from django.shortcuts import redirect, render
 
-from itr.models import Vacation, VacationStatus
+from itr.models import Vacation  # , VacationStatus
 from users.forms import UserProfileForm
 
 
@@ -24,8 +24,7 @@ def change_password_view(request):
 
 @login_required
 def profile(request):
-    vacations = Vacation.objects.filter(
-        user=request.user)
+    vacations = Vacation.objects.filter(user=request.user)
     return render(request, "users/profile.html", {"vacations": vacations})
 
 

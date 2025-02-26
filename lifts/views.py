@@ -1,15 +1,14 @@
-from django.utils import timezone
 from django.contrib import messages
-
+from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.views.generic import ListView, DetailView, CreateView, View
-from django.contrib.auth import login
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils import timezone
+from django.views.generic import CreateView, DetailView, ListView, View
 
-from lifts.forms import ReplacementForm, ProblemForm
-from lifts.models import *
+from lifts.forms import ProblemForm, ReplacementForm
+from lifts.models import TO, Building, Elevator, Problem, Replacement
 
 
 class ElevatorMixin:
@@ -55,9 +54,7 @@ class ElevatorDetailView(LoginRequiredMixin, DetailView):
         context.update(
             {
                 "problems": Problem.objects.filter(elevator=elevator).order_by("-id"),
-                "replacements": Replacement.objects.filter(elevator=elevator).order_by(
-                    "-id"
-                ),
+                "replacements": Replacement.objects.filter(elevator=elevator).order_by("-id"),
                 "tos": TO.objects.filter(elevator=elevator).order_by("-date"),
             }
         )
@@ -94,9 +91,7 @@ class ProblemResolveView(LoginRequiredMixin, View):
         problem = get_object_or_404(Problem, pk=pk)
         problem.resolved = True
         problem.save()
-        return redirect(
-            reverse("lifts:elevator_detail", kwargs={"pk": problem.elevator.pk})
-        )
+        return redirect(reverse("lifts:elevator_detail", kwargs={"pk": problem.elevator.pk}))
 
 
 class ReplacementList(LoginRequiredMixin, ListView):
@@ -129,9 +124,7 @@ class ReplacementResolveView(LoginRequiredMixin, View):
         replacement = get_object_or_404(Replacement, pk=pk)
         replacement.resolved = True
         replacement.save()
-        return redirect(
-            reverse("lifts:elevator_detail", kwargs={"pk": replacement.elevator.pk})
-        )
+        return redirect(reverse("lifts:elevator_detail", kwargs={"pk": replacement.elevator.pk}))
 
 
 class TOList(LoginRequiredMixin, ListView):

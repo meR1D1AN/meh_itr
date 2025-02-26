@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from itr.models import Employee, Customer, WorkDay, Vacation
+from itr.models import Customer, Employee, Vacation, WorkDay
 
 
 @admin.register(Employee)
@@ -9,7 +9,8 @@ class EmployeeAdmin(admin.ModelAdmin):
 
     def get_customers(self, obj):
         return ", ".join([customer.customer_name for customer in obj.customers.all()])
-    get_customers.short_description = 'Заказчики'
+
+    get_customers.short_description = "Заказчики"
 
 
 @admin.register(Customer)
@@ -25,9 +26,11 @@ class CustomerAdmin(admin.ModelAdmin):
         "created_by",
     )
 
+
 @admin.register(WorkDay)
 class WorkDayAdmin(admin.ModelAdmin):
     list_display = ("employee", "date", "salary")
+
 
 @admin.register(Vacation)
 class VacationAdmin(admin.ModelAdmin):

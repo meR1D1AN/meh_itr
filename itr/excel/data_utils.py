@@ -1,13 +1,11 @@
-from datetime import datetime
 from calendar import monthrange
-from itr.models import WorkDay, Employee
+
+from itr.models import Employee, WorkDay
 
 
 def get_workdays(customer, current_month, current_year):
     employees = Employee.objects.filter(customer=customer)
-    workdays = WorkDay.objects.filter(
-        employee__in=employees, date__year=current_year, date__month=current_month
-    )
+    workdays = WorkDay.objects.filter(employee__in=employees, date__year=current_year, date__month=current_month)
     employee_workdays = {}
     for workday in workdays:
         if workday.employee not in employee_workdays:

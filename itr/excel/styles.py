@@ -1,4 +1,4 @@
-from openpyxl.styles import Font, PatternFill, Border, Side, Alignment
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 
 
 def get_styles():

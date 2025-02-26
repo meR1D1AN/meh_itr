@@ -1,7 +1,10 @@
 from datetime import date
-from django.db import models
+
 from django.core.validators import RegexValidator
+from django.db import models
+
 from users.models import User
+
 
 NULLABLE = {"null": True, "blank": True}
 
@@ -55,9 +58,7 @@ class Customer(models.Model):
         help_text="Введите адрес объекта, где будет работать сотрудник",
         **NULLABLE,
     )
-    salary = models.PositiveIntegerField(
-        verbose_name="ЗП", help_text="Введите ЗП сотрудника", **NULLABLE
-    )
+    salary = models.PositiveIntegerField(verbose_name="ЗП", help_text="Введите ЗП сотрудника", **NULLABLE)
     work_schedule = models.CharField(
         max_length=10,
         choices=GrafikChoices.choices,
@@ -141,12 +142,8 @@ class Employee(models.Model):
     """
 
     # ФИО сотрудника
-    last_name = models.CharField(
-        max_length=30, verbose_name="Фамилия", help_text="Введите фамилию сотрудника"
-    )
-    first_name = models.CharField(
-        max_length=30, verbose_name="Имя", help_text="Введите имя сотрудника"
-    )
+    last_name = models.CharField(max_length=30, verbose_name="Фамилия", help_text="Введите фамилию сотрудника")
+    first_name = models.CharField(max_length=30, verbose_name="Имя", help_text="Введите имя сотрудника")
     middle_name = models.CharField(
         max_length=45,
         verbose_name="Отчество",
@@ -186,18 +183,14 @@ class Employee(models.Model):
         max_length=4,
         verbose_name="Серия паспорта",
         help_text="в формате 1234",
-        validators=[
-            RegexValidator(r"^\d{4}$", "Серия паспорта должна состоять из 4 цифр.")
-        ],
+        validators=[RegexValidator(r"^\d{4}$", "Серия паспорта должна состоять из 4 цифр.")],
         **NULLABLE,
     )
     number = models.CharField(
         max_length=6,
         verbose_name="Номер паспорта",
         help_text="в формате 123456",
-        validators=[
-            RegexValidator(r"^\d{6}$", "Номер паспорта должен состоять из 6 цифр.")
-        ],
+        validators=[RegexValidator(r"^\d{6}$", "Номер паспорта должен состоять из 6 цифр.")],
         **NULLABLE,
     )
     issued_by = models.CharField(
@@ -211,9 +204,7 @@ class Employee(models.Model):
         help_text="Выберете дату выданы паспорта",
         **NULLABLE,
     )
-    date_of_birth = models.DateField(
-        verbose_name="Дата рождения", help_text="Выберете дату рождения", **NULLABLE
-    )
+    date_of_birth = models.DateField(verbose_name="Дата рождения", help_text="Выберете дату рождения", **NULLABLE)
     place_of_birth = models.CharField(
         max_length=100,
         verbose_name="Место рождения",
@@ -254,9 +245,7 @@ class Employee(models.Model):
     )
 
     # Адрес проживания сотрудника
-    metro = models.CharField(
-        max_length=100, verbose_name="Метро", help_text="Выберите метро"
-    )
+    metro = models.CharField(max_length=100, verbose_name="Метро", help_text="Выберите метро")
     residential_address = models.CharField(
         max_length=100,
         verbose_name="Адрес проживания",
@@ -327,10 +316,7 @@ class Employee(models.Model):
         age = (
             today.year
             - self.date_of_birth.year
-            - (
-                (today.month, today.day)
-                < (self.date_of_birth.month, self.date_of_birth.day)
-            )
+            - ((today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day))
         )
         return age
 
@@ -341,9 +327,7 @@ class Employee(models.Model):
 
 
 class WorkDay(models.Model):
-    employee = models.ForeignKey(
-        Employee, on_delete=models.CASCADE, related_name="workdays"
-    )
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="workdays")
     date = models.DateField()
     salary = models.DecimalField(max_digits=10, decimal_places=2, default=0, **NULLABLE)
 
@@ -394,9 +378,7 @@ class Vacation(models.Model):
         **NULLABLE,
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
-    updated_at = models.DateTimeField(
-        auto_now=True, verbose_name="Дата последнего изменения"
-    )
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата последнего изменения")
     created_by = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
@@ -410,7 +392,10 @@ class Vacation(models.Model):
 
     def __str__(self):
         if self.user:
-            return f"Отпуск пользователя {self.user.last_name} {self.user.first_name[0]}. : {self.start_date} - {self.end_date}"
+            return (
+                f"Отпуск пользователя {self.user.last_name} {self.user.first_name[0]}. "
+                f": {self.start_date} - {self.end_date}"
+            )
         elif self.employee:
             return f"Отпуск сотрудника {self.employee}: {self.start_date} - {self.end_date}"
         return f"Отпуск: {self.start_date} - {self.end_date}"

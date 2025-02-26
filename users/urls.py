@@ -1,6 +1,8 @@
 from django.urls import path
+
 from users import apps
 from users.views import change_password_view, edit_profile, profile
+
 
 app_name = apps.UsersConfig.name
 
