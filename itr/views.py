@@ -21,12 +21,10 @@ from itr.excel.get_current_month_year import get_current_month_year
 from itr.excel.styles import get_styles
 from itr.forms import CombinedEmployeeCustomerForm, CustomerForm, VacationForm
 from itr.models import Customer, Employee, Vacation, VacationStatus
+from itr.salary import calculate_salary  # noqa: F401
+from itr.utils import sanitize_filename  # noqa: F401
 
 from .forms import MONTHS
-
-
-# from itr.salary import calculate_salary
-# from itr.utils import sanitize_filename
 
 
 class EmployeeListView(LoginRequiredMixin, ListView):
