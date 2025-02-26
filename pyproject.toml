@@ -7,17 +7,37 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-django = "^5.1.2"
+django = "5.1.6"
 psycopg2-binary = "^2.9.9"
 python-dotenv = "^1.0.1"
 gunicorn = "^23.0.0"
 django-crispy-forms = "^2.3"
 crispy-bootstrap5 = "^2024.10"
 openpyxl = "^3.1.5"
-poetry = "^2.0.1"
 gevent = "^24.11.1"
+pre-commit = "^4.1.0"
 
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
+isort = "^5.13.2"
+flake8 = "^7.1.1"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 119
+extend-exclude = "migrations/"
+
+[tool.isort]
+profile = "black"
+include_trailing_comma = true
+line_length = 119
+lines_after_imports = 2
+multi_line_output = 3
+skip = ["__init__.py", "**/migrations/*"]
+
+[tool.flake8]
+max-line-length = 119
+exclude = ".git,__pycache__,poetry.lock,pyproject.toml,migrations,tests.py"
