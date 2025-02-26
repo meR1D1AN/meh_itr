@@ -9,9 +9,9 @@ dot_env = os.path.join(BASE_DIR, ".env")
 load_dotenv(dotenv_path=dot_env)
 
 SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = os.getenv("DEBUG") == "True"
+DEBUG = False
 
-ALLOWED_HOSTS = ["mer1d1an.ru", "212.193.27.109", "127.0.0.1"]
+ALLOWED_HOSTS = ["mer1d1an.ru", "127.0.0.1"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -52,7 +52,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-		"config.context_processors.user_groups",
+                "config.context_processors.user_groups",
             ],
         },
     },
@@ -92,9 +92,7 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')  # Куда собираются файлы
-# STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -121,7 +119,7 @@ FILE_UPLOAD_HANDLERS = [
 
 AUTH_USER_MODEL = "users.User"
 
-#LOGGING = {
+# LOGGING = {
 #    'version': 1,
 #    'disable_existing_loggers': False,
 #    'handlers': {
@@ -135,4 +133,4 @@ AUTH_USER_MODEL = "users.User"
 #            'level': 'DEBUG',
 #        },
 #    },
-#}
+# }

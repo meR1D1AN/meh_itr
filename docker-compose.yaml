@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres
+    image: postgres:17.2
     restart: on-failure
     env_file:
       - .env
@@ -24,7 +24,7 @@ services:
         condition: service_healthy
     volumes:
       - .:/app
-      - static_volume:/app/static  # Монтируем volume в контейнер app
+      - static_volume:/app/static
     env_file:
       - .env
     command: >
