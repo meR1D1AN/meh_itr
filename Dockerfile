@@ -13,6 +13,3 @@ RUN pip install poetry && \
 
 # Копируем остальной код проекта
 COPY . .
-
-# Собираем статические файлы при сборке образа
-RUN python manage.py collectstatic --noinput
