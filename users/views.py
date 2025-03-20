@@ -16,7 +16,7 @@ def change_password_view(request):
             user = form.save()
             update_session_auth_hash(request, user)  # Важно для сохранения авторизации
             messages.success(request, "Пароль успешно изменен!")
-            return redirect("home")  # Перенаправление после смены пароля
+            return redirect("lifts:home")  # Перенаправление после смены пароля
     else:
         form = PasswordChangeForm(request.user)
     return render(request, "users/change_password.html", {"form": form})
