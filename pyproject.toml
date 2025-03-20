@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "meh"
-version = "0.1.0"
-description = ""
-authors = ["Никита Шидогубов <nikita@mer1d1an.ru>"]
+name = "ИТР & МЕХ"
+version = "0.9.0"
+description = "Вэб-приложение для начальников участка, электромехаников по лифтам и эскалаторам"
+authors = ["Никита Шидогубов <mered1an@live.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
